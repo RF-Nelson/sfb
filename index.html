@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Asteroids</title>
+    <link rel="stylesheet" href="css/sfb.css" charset="utf-8">
+  </head>
+  <body>
+    <canvas id="sfb-game"></canvas>
+
+
+    <script type="application/javascript" src="vendor/keymaster.js"></script>
+
+    <script type="application/javascript" src="lib/utils.js"></script>
+    <script type="application/javascript" src="lib/gameObject.js"></script>
+    <script type="application/javascript" src="lib/staticObject.js"></script>
+    <!-- // <script type="application/javascript" src="lib/movingObject.js"></script>
+    // <script type="application/javascript" src="lib/fart.js"></script>
+    // <script type="application/javascript" src="lib/gnome.js"></script> -->
+    <script type="application/javascript" src="lib/scene.js"></script>
+    <script type="application/javascript" src="lib/game.js"></script>
+    <script type="application/javascript" src="lib/gameView.js"></script>
+
+    <script type="application/javascript">
+      (function () {
+        var canvasEl = document.getElementsByTagName("canvas")[0];
+        canvasEl.width = SFB.Game.DIM_X;
+        canvasEl.height = SFB.Game.DIM_Y;
+        var ctx = canvasEl.getContext("2d");
+        var game = new SFB.Game();
+        new SFB.GameView(game, ctx).start();
+      })();
+    </script>
+  </body>
+</html>

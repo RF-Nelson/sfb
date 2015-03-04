@@ -1,0 +1,132 @@
+gnomes?
+SBD - invisible fart that grows in radius and wraps until it hits another player
+   and does damage according to how big that radius is
+everything coming out of the ass
+keeping track of stats: kills, deaths, damage, farts, fart effectiveness, etc.
+attacks: cropdusting, sharts, etc
+farts have duration/expiration
+ability that gives player health upon colliding with fart. Health can increase 	  infinitely
+deal damage when landing on player's head (ability to also fart on head)
+wedgie attack- other player cannot fart for set time
+bubble fart- hold/release/persist
+
+
+PROTOTYPE:
+	gravity?
+	jumping
+	movement
+	jumping/landing on platforms
+	bullets
+	simultaneous multiplayer
+	killing people
+	3 lives?
+	respawn until out of lives, 
+	last player alive wins
+	health bar/number on top of each player
+	wrapping?
+
+CLASSES:
+	GameObject
+	Scene 
+	StaticObject < GameObject
+	MovingObject < GameObject
+	Farts < MovingObject
+		belongs_to gnome
+	Gnome < MovingObject
+		has_many bullets
+	Game
+	GameView
+
+GameObject: all objects in the game
+	ivars:sf
+		[x,y] pos
+		Game game
+	methods:
+		draw(canvas)
+
+Scene: background scene with static drawn scenery (trees, etc) and interactive scenery (i.e. platforms)
+	ivars:
+		[array of static objs (only platforms right now)]
+	methods:
+		draw()
+
+MovingObject:
+	ivars:
+		[x,y] pos
+		int vel
+		[x, y] dir
+		boolean isWrappable
+	methods:
+		move()
+		draw()
+		collidesWith(otherObject)
+
+Farts:
+	ivars: 
+		super
+		gnome id
+		strength - represents damage done
+	methods:
+		super
+
+Gnome:
+	ivars:
+		super
+		health
+		lives
+		Friction- bringing horiz velocity back towards 0
+		ACCGRAV- increasing vert velocity in the neg direction 
+	methods:
+		handleHit- deals damage and calls respawn if health <= 0 
+		respawn- start at ran position and remove one life 
+		move- updates pos based on vel and current pos
+		jump- increases vel in the ver direction
+		run- increases vel in current horiz direction
+		fart! 
+
+Game
+	ivars:
+		gnome1
+		gnome2
+		Scene
+		[GameObject] allObjects
+		[xDim, yDim]
+		player1, player2
+	method:
+		addObject(obj);
+		step()
+			moveEverything() - move all moving objs 
+			checkCollisions() - check moving objs + static objs for collisions
+			isOver
+				winner() - return player	
+			drawAll()
+
+GameView:
+	ivars:
+		canvas
+		game
+	methods:
+		keybinding() - calls run, jump
+		setup() - setup initial game state && loops on set interval
+
+time frame for completion of the prototype?
+
+
+DIVISION OF LABOR:
+	Dayna:
+		GameObject
+		Scene 
+		StaticObject < GameObject
+		Game
+		GameView
+		html/canvas
+
+	Bryan:	
+		MovingObject < GameObject
+		Farts < MovingObject
+			belongs_to gnome
+	
+	Rich:	
+		Gnome < MovingObject
+			has_many bullets
+	
