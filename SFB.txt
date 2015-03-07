@@ -13,6 +13,8 @@ Later Phase Ideas:
 		wedgie attack- other player cannot fart for set time
 		bubble fart- hold/release/persist
 		homing fart
+		concussion fart - knocks you down you have to toggle left/right/jump 10 to get back up 
+		
 	
 -Players:
 	keeping track of stats: kills, deaths, damage, farts, fart effectiveness, etc.
@@ -20,6 +22,7 @@ Later Phase Ideas:
 -Powerups:
 	Health can increase infinitely
 	ability that gives player health upon colliding with fart. 
+	slow moving fart mines - they hover 
 
 -Scene:
 	Scenery may shift or disappear later in rounds
