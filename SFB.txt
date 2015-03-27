@@ -1,15 +1,32 @@
-gnomes?
-SBD - invisible fart that grows in radius and wraps until it hits another player
-   and does damage according to how big that radius is
-everything coming out of the ass
-keeping track of stats: kills, deaths, damage, farts, fart effectiveness, etc.
-attacks: cropdusting, sharts, etc
-farts have duration/expiration
-ability that gives player health upon colliding with fart. Health can increase 	  infinitely
-deal damage when landing on player's head (ability to also fart on head)
-wedgie attack- other player cannot fart for set time
-bubble fart- hold/release/persist
+Later Phase Ideas:
+-gnomes?
+-Damage:
+	Collide with other gnome:
+		deal damage when landing on player's head (ability to also fart on head)
+	Farts:
+		everything coming out of the ass - all attacks leave from the butt
+		farts have duration/expiration
+	Types of Fart Attacks:
+		SBD - invisible fart that grows in radius and wraps until it hits another player 
+			and does damage according to how big that radius is
+		attacks: cropdusting, sharts, etc	
+		wedgie attack- other player cannot fart for set time
+		bubble fart- hold/release/persist
+		homing fart
+		concussion fart - knocks you down you have to toggle left/right/jump 10 to get back up 
+		
+	
+-Players:
+	keeping track of stats: kills, deaths, damage, farts, fart effectiveness, etc.
+	
+-Powerups:
+	Health can increase infinitely
+	ability that gives player health upon colliding with fart. 
+	slow moving fart mines - they hover 
 
+-Scene:
+	Scenery may shift or disappear later in rounds
+	Different levels different scenes
 
 PROTOTYPE:
 	gravity?
