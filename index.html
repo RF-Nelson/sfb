@@ -16,6 +16,7 @@
     <script type="application/javascript" src="lib/fart.js"></script>
     <script type="application/javascript" src="lib/animatedObject.js"></script>
     <script type="application/javascript" src="lib/animation.js"></script>
+    <script type="application/javascript" src="lib/spriteSheet.js"></script>
     <script type="application/javascript" src="lib/gnome.js"></script>
     <script type="application/javascript" src="lib/scene.js"></script>
     <script type="application/javascript" src="lib/fartCloud.js"></script>
@@ -29,15 +30,17 @@
         canvasEl.height = SFB.Game.DIM_Y;
         var ctx = canvasEl.getContext("2d");
         game = new SFB.Game();
-        var that = this;
-        function startGame() {
-          if (that.game.spritesStillLoading > 0) {
-            startGame()
-          } else {
-            new SFB.GameView(that.game, ctx).start();
-          }
-        };
-        startGame();
+        // var that = this;
+        // function startGame() {
+        //   if (that.game.spritesStillLoading > 0) {
+        //     startGame()
+        //   } else {
+        //     new SFB.GameView(that.game, ctx).start();
+        //   }
+        // };
+        // startGame();
+
+        new SFB.GameView(game, ctx).start();
       })();
     </script>
   </body>
