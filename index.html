@@ -21,17 +21,21 @@
     <script type="application/javascript" src="lib/gameView.js"></script>
 
     <script type="application/javascript">
-      (function startGame() {
+      (function () {
         var canvasEl = document.getElementsByTagName("canvas")[0];
         canvasEl.width = SFB.Game.DIM_X;
         canvasEl.height = SFB.Game.DIM_Y;
         var ctx = canvasEl.getContext("2d");
         game = new SFB.Game();
-        if (game.spritesStillLoading > 0) {
-          startGame()
-        } else {
-          new SFB.GameView(game, ctx).start();
-        }
+        var that = this;
+        function startGame() {
+          if (that.game.spritesStillLoading > 0) {
+            startGame()
+          } else {
+            new SFB.GameView(that.game, ctx).start();
+          }
+        };
+        startGame();
       })();
     </script>
   </body>
