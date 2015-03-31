@@ -1,0 +1,36 @@
+primary
+  3 different farts
+  DONE (at least two players)
+  art/animations
+
+secondary
+  AI
+  3 different levels
+  3 different powerups
+  4 players
+  using game controllers
+  network
+
+Remaining things to do for MVP:
+  DONE (gravity)
+  -jumping/landing on platforms
+  DONE (simultaneous multiplayer)
+
+MVP completion due by Sunday March 29
+  -Bryan tackle gravity
+  -Dayna work on staticObject collisions & rectangular hitbox
+  -Rich work on art
+  -meet on Thursday to discuss gravity
+
+Phase 2 due Friday April 3
+  -Monday meet to discuss bullets, make a new bullet, and divide work
+  -Wednesday afternoon we check in to see where we're at
+
+Phase 3
+  -implement art & animation
+
+Phase 4
+  -potentially move on to powerups or spend more time on bullets
+
+Phase 5
+  -levels and/or AI
