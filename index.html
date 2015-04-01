@@ -12,11 +12,13 @@
     <script type="application/javascript" src="lib/utils.js"></script>
     <script type="application/javascript" src="lib/gameObject.js"></script>
     <script type="application/javascript" src="lib/staticObject.js"></script>
-    <script type="application/javascript" src="lib/movingObject.js"></script>
-    <script type="application/javascript" src="lib/fart.js"></script>
-    <script type="application/javascript" src="lib/animatedObject.js"></script>
+
     <script type="application/javascript" src="lib/animation.js"></script>
     <script type="application/javascript" src="lib/spriteSheet.js"></script>
+    <script type="application/javascript" src="lib/movingObject.js"></script>
+    <script type="application/javascript" src="lib/spriteGameObject.js"></script>
+    <script type="application/javascript" src="lib/fart.js"></script>
+    <script type="application/javascript" src="lib/animatedObject.js"></script>
     <script type="application/javascript" src="lib/gnome.js"></script>
     <script type="application/javascript" src="lib/scene.js"></script>
     <script type="application/javascript" src="lib/fartCloud.js"></script>
@@ -30,17 +32,16 @@
         canvasEl.height = SFB.Game.DIM_Y;
         var ctx = canvasEl.getContext("2d");
         game = new SFB.Game();
-        // var that = this;
-        // function startGame() {
-        //   if (that.game.spritesStillLoading > 0) {
-        //     startGame()
-        //   } else {
-        //     new SFB.GameView(that.game, ctx).start();
-        //   }
-        // };
-        // startGame();
+        var that = this;
+        var startGame = function() {
+          if (that.game.spritesStillLoading > 0) {
+            setTimeout(startGame(), 100)
+          } else {
+            new SFB.GameView(that.game, ctx).start();
+          }
+        };
+        startGame();
 
-        new SFB.GameView(game, ctx).start();
       })();
     </script>
   </body>
