@@ -11,13 +11,13 @@
  *  -fartday
 *     -beans as ammo for farts?
 *     -at least two special fart options
-*1.  -wrappable fart
-1.         -bouncing fart
-1. *       -big fart aka superfart
-1. *       -strong, slow moving fart
-1. *       -fart mines
-*     *     -doesnt move
-*     *     -remote detonation
+* *  -wrappable fart
+* *         -bouncing fart
+*  *       -big fart aka superfart
+*  *       -strong, slow moving fart
+*  *       -fart mines
+*     *  *   -doesnt move
+*     *   *  -remote detonation
 *   -BY END OF MONDAY, DECIDE HOW TO IMPLEMENT MULTIPLE FARTS****
     (menu system or in-game powerups?)
 
