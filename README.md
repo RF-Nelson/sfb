@@ -1,11 +1,12 @@
 # SFB #
 
 ### WEEKEND ###
-* things that need to be perfect:*
-1.     -scaling / gnome size
-1.     -animation
-1.     -movement
-1.     -collisions
+** things that need to be perfect**:
+
+*     -scaling / gnome size
+*    -animation
+*     -movement
+*   -collisions
 
 ### MONDAY ###
  *  -fartday
