@@ -18,8 +18,8 @@
 *  *       -fart mines
 *     *  *   -doesnt move
 *     *   *  -remote detonation
-*   -BY END OF MONDAY, DECIDE HOW TO IMPLEMENT MULTIPLE FARTS****
-    (menu system or in-game powerups?)
+*   **BY END OF MONDAY, DECIDE HOW TO IMPLEMENT MULTIPLE FARTS**
+   * *  (menu system or in-game powerups?)
 
 
     
