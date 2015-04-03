@@ -1,7 +1,7 @@
 # SFB #
 
 ### WEEKEND ###
-  things that need to be perfect:
+*  things that need to be perfect:*
 *   -scaling / gnome size
 *   -animation
 *   -movement
@@ -11,11 +11,11 @@
  *  -fartday
 *     -beans as ammo for farts?
 *     -at least two special fart options
-*       -wrappable fart
-*       -bouncing fart
-*       -big fart aka superfart
-*       -strong, slow moving fart
-*       -fart mines
+*      1.  -wrappable fart
+1. *       -bouncing fart
+1. *       -big fart aka superfart
+1. *       -strong, slow moving fart
+1. *       -fart mines
 *         -doesnt move
 *         -remote detonation
 *   -BY END OF MONDAY, DECIDE HOW TO IMPLEMENT MULTIPLE FARTS****
@@ -23,7 +23,7 @@
 
 
     
-## things we'd like to have: ##
+## things we'd *like* to have: ##
 * -multiple farts
 * -use controllers for up to 4 people
 * -menu / user interface (select speed/health combo and fart type)
@@ -31,6 +31,6 @@
 -powerups
 
 
-## if we had forever, we'd add these options: ##
+## if we had *forever*, we'd add these options: ##
 -special ability option
 -network play
