@@ -2,35 +2,35 @@
 
 ### WEEKEND ###
 *  things that need to be perfect:*
-*   -scaling / gnome size
-*   -animation
-*   -movement
-*   -collisions
+1. *   -scaling / gnome size
+1. *   -animation
+1. *   -movement
+1. *   -collisions
 
 ### MONDAY ###
  *  -fartday
 *     -beans as ammo for farts?
 *     -at least two special fart options
-*      1.  -wrappable fart
-1. *       -bouncing fart
+*1.  -wrappable fart
+1.         -bouncing fart
 1. *       -big fart aka superfart
 1. *       -strong, slow moving fart
 1. *       -fart mines
-*         -doesnt move
-*         -remote detonation
+*     *     -doesnt move
+*     *     -remote detonation
 *   -BY END OF MONDAY, DECIDE HOW TO IMPLEMENT MULTIPLE FARTS****
     (menu system or in-game powerups?)
 
 
     
 ## things we'd *like* to have: ##
-* -multiple farts
-* -use controllers for up to 4 people
-* -menu / user interface (select speed/health combo and fart type)
-* -fartpack
--powerups
+1.  -multiple farts
+1.  -use controllers for up to 4 people
+1.  -menu / user interface (select speed/health combo and fart type)
+1.  -fartpack
+1.  -powerups
 
 
 ## if we had *forever*, we'd add these options: ##
--special ability option
--network play
+1. -special ability option
+1. -network play
