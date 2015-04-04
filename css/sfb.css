@@ -1,5 +1,6 @@
 canvas {
-  background-image: url('../sprites/cloud.gif')
+  background-image: url('../sprites/cloud.gif');
+  background-size: cover;
 }
 
 html, body {
