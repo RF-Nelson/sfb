@@ -5,7 +5,9 @@
     <link rel="stylesheet" href="css/sfb.css" charset="utf-8">
   </head>
   <body>
-    <canvas id="sfb-game"></canvas>
+    <div id="gameArea">
+      <canvas id="sfb-game"></canvas>
+    </div>
 
 
     <script type="application/javascript" src="vendor/keymaster.js"></script>
@@ -22,6 +24,8 @@
     <script type="application/javascript" src="lib/gnome.js"></script>
     <script type="application/javascript" src="lib/scene.js"></script>
     <script type="application/javascript" src="lib/fart.js"></script>
+    <script type="application/javascript" src="lib/bean.js"></script>
+
     <script type="application/javascript" src="lib/fartCloud.js"></script>
     <script type="application/javascript" src="lib/game.js"></script>
     <script type="application/javascript" src="lib/gameView.js"></script>
@@ -33,15 +37,16 @@
         canvasEl.height = SFB.Game.DIM_Y;
         var ctx = canvasEl.getContext("2d");
         game = new SFB.Game();
-        var that = this;
-        var startGame = function() {
-          if (that.game.spritesStillLoading > 0) {
-            setTimeout(startGame(), 100)
-          } else {
-            new SFB.GameView(that.game, ctx).start();
-          }
-        };
-        startGame();
+        // var that = this;
+        // var startGame = function() {
+        //   if (that.game.spritesStillLoading > 0) {
+        //     setTimeout(startGame(), 100)
+        //   } else {
+        //     new SFB.GameView(that.game, ctx).start();
+        //   }
+        // };
+        // startGame();
+        new SFB.GameView(game, ctx).start();
 
       })();
     </script>
