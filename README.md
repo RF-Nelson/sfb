@@ -1,37 +1,30 @@
 # SFB #
 
-### WEEKEND ###
-** things that need to be perfect**:
+### TO DO ###
+* menu system
+* menu graphics
+* powerups
+* background graphics
+* level design
+* controller input
+* animations:
+* * fartpack
+* * fartthrower
+* * mine fart
+* * bouncing fart
+* * other powerups
+* * gnomeDeath
 
-*     -scaling / gnome size
-*    -animation
-*     -movement
-*   -collisions
-
-### MONDAY ###
- *  -fartday
-*     -beans as ammo for farts?
-*     -at least two special fart options
-* *  -wrappable fart
-* *         -bouncing fart
-*  *       -big fart aka superfart
-*  *       -strong, slow moving fart
-*  *       -fart mines
-*     *  *   -doesnt move
-*     *   *  -remote detonation
-*   **BY END OF MONDAY, DECIDE HOW TO IMPLEMENT MULTIPLE FARTS**
-   * *  (menu system or in-game powerups?)
+### SECONDARY TO DO ###
+* "chance" powerups that may not always be beneficial
+* network play
+* additional levels
 
 
-    
-## things we'd *like* to have: ##
-1.  -multiple farts
-1.  -use controllers for up to 4 people
-1.  -menu / user interface (select speed/health combo and fart type)
-1.  -fartpack
-1.  -powerups
+## DONE ##
 
-
-## if we had *forever*, we'd add these options: ##
-1. -special ability option
-1. -network play
+* scaling / gnome size
+* animation
+* movement
+* collisions
+* beans as ammo for farts
