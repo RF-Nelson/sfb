@@ -9,7 +9,53 @@
       <canvas id="sfb-game"></canvas>
     </div>
 
+    <section class="game-form">
+      <ul class="player-number-selection">How many players?
+        <li class="player-number" data-id="1">ONE</li>
+        <li class="player-number" data-id="2">TWO</li>
+        <li class="player-number" data-id="3">THREE</li>
+        <li class="player-number" data-id="4">FOUR</li>
+      </ul>
 
+      <ul class="player-forms">
+        <ul name="player-1">Player ONE: Select Player Type
+          <li class="player-type" data-id="1" data-type="Fast">Fast and Weak</li>
+          <li class="player-type" data-id="1" data-type="Slow">Slow and Strong</li>
+        </ul>
+        <ul name="player-1">Player ONE: Select Special Fart
+          <li class="player-fart" data-id="1" data-type="super">Super</li>
+          <li class="player-fart" data-id="1" data-type="mine">Mine</li>
+        </ul>
+        <ul name="player-2">Player TWO: Select Player Type
+          <li class="player-type" data-id="2" data-type="Fast">Fast and Weak</li>
+          <li class="player-type" data-id="2" data-type="Slow">Slow and Strong</li>
+        </ul>
+        <ul name="player-2">Player TWO: Select Special Fart
+          <li class="player-fart" data-id="2" data-type="super">Super</li>
+          <li class="player-fart" data-id="2" data-type="mine">Mine</li>
+        </ul>
+        <ul name="player-3">Player THREE: Select Player Type
+          <li class="player-type" data-id="3" data-type="Fast">Fast and Weak</li>
+          <li class="player-type" data-id="3" data-type="Slow">Slow and Strong</li>
+        </ul>
+        <ul name="player-3">Player THREE: Select Special Fart
+          <li class="player-fart" data-id="3" data-type="super">Super</li>
+          <li class="player-fart" data-id="3" data-type="mine">Mine</li>
+        </ul>
+        <ul name="player-4">Player FOUR: Select Player Type
+          <li class="player-type" data-id="4" data-type="Fast">Fast and Weak</li>
+          <li class="player-type" data-id="4" data-type="Slow">Slow and Strong</li>
+        </ul>
+        <ul name="player-4">Player FOUR: Select Special Fart
+          <li class="player-fart" data-id="4" data-type="super">Super</li>
+          <li class="player-fart" data-id="4" data-type="mine">Mine</li>
+        </ul>
+      </ul>
+
+      <button id="start-game">Start Game</button>
+    </section>
+
+    <script src="vendor/jquery-2.1.1.js"></script>
     <script type="application/javascript" src="vendor/keymaster.js"></script>
 
     <script type="application/javascript" src="lib/utils.js"></script>
@@ -33,21 +79,103 @@
 
     <script type="application/javascript">
       (function () {
+        // GameStateManager = new SFB.GameStateManager_Singleton();
+        // ID.game_state_title = GameStateManager.add(new TitleMenuState());
+        // ID.game_state_play = GameStateManager.add(new TitleMenuState());
         var canvasEl = document.getElementsByTagName("canvas")[0];
         canvasEl.width = SFB.Game.DIM_X;
         canvasEl.height = SFB.Game.DIM_Y;
         var ctx = canvasEl.getContext("2d");
-        game = new SFB.Game();
-        // var that = this;
-        // var startGame = function() {
-        //   if (that.game.spritesStillLoading > 0) {
-        //     setTimeout(startGame(), 100)
-        //   } else {
-        //     new SFB.GameView(that.game, ctx).start();
-        //   }
-        // };
-        // startGame();
-        new SFB.GameView(game, ctx).start();
+        var that = this;
+        var startGame = function() {
+          if (that.game.spritesStillLoading > 0) {
+            setTimeout(startGame(), 100)
+          } else {
+            new SFB.GameView(that.game, ctx).start();
+          }
+        };
+
+        /* Store the players and their attrs in an object that will then be passed to the new game*/
+
+        PLAYERS = {};
+
+        /* EVENT LISTENERS */
+
+        /* Get player number*/
+        var addPlayers = function (event) {
+          var target = $(event.currentTarget),
+              players = target.data('id');
+
+          for(var i = 1; i <= 4; i ++) {
+            PLAYERS[i] = null;
+            var playerChoices = document.getElementsByName('player-' + i);
+
+            for(var j = 0; j < playerChoices.length; j ++) {
+              playerChoices[j].classList.remove('display-player-types');
+            }
+          }
+
+          for(var i = 1; i <= players; i ++) {
+            var playerChoices = document.getElementsByName('player-' + i);
+            PLAYERS[i] = { attrs: {} };
+
+            for(var j = 0; j < playerChoices.length; j ++) {
+              playerChoices[j].classList.add('display-player-types');
+
+            }
+          }
+        }
+
+        var playerNumbers = document.getElementsByClassName('player-number');
+        for(var i = 0; i < playerNumbers.length; i ++) {
+          playerNumbers[i].addEventListener('click', addPlayers);
+        }
+
+        /* Get player speed/health setting */
+        var addPlayerstype = function (event) {
+          var target = $(event.currentTarget),
+              player = target.data('id'),
+              playerType = target.data('type');
+
+          PLAYERS[player]['attrs']['type'] = playerType;
+        }
+
+        var playersType = document.getElementsByClassName('player-type');
+        for(var i = 0; i < playersType.length; i ++) {
+          playersType[i].addEventListener('click', addPlayerstype);
+        }
+
+
+        /* Get player special fart */
+        var addPlayersFart = function (event) {
+          var target = $(event.currentTarget),
+              player = target.data('id'),
+              playerFart = target.data('type');
+
+          PLAYERS[player]['attrs']['fart'] = playerFart;
+        }
+
+        var playersFart = document.getElementsByClassName('player-fart');
+        for(var i = 0; i < playersType.length; i ++) {
+          playersFart[i].addEventListener('click', addPlayersFart);
+        }
+
+        /* Start Game */
+        var readyGame = function(options) {
+          game = new SFB.Game(PLAYERS);
+          // document.getElementByClassName('game-form').html();
+          var menu = document.getElementsByClassName('game-form')[0];
+          menu.classList.add('hide-menu');
+
+
+          startGame();
+
+        };
+
+        var startButton = document.getElementById('start-game');
+        startButton.addEventListener('click', readyGame);
+
+
 
       })();
     </script>

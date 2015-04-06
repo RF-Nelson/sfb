@@ -1,6 +1,103 @@
+/* RESET */
+html, body, header, nav, h1, a,
+ul, li, strong, main, button, i,
+section, img, div, h2, p, form,
+fieldset, label,
+span, article, footer, time, small {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  vertical-align: inherit;
+  box-sizing: inherit;
+  background: transparent;
+}
+
+ul {
+  list-style: none;
+}
+
+input,
+button,
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* CLEARFIX */
+
+.group:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+button {
+ cursor: pointer;
+}
+
+/* STYLING */
+
+.game-form {
+  width: 800px;
+  height: 800px;
+  background: green;
+  text-align: center;
+  margin: 200px auto;
+}
+
+.hide-menu {
+  display: none;
+}
+
+.player-number-selection {
+  background: lightgray;
+  width: 400px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 10px;
+  font-size: 44px;
+
+}
+
+.player-number-selection > li {
+  display: none;
+}
+
+.player-number-selection:hover.player-number-selection > li {
+  display: block;
+  cursor: pointer;
+  padding: 20px 10px;
+  font-size: 28px;
+
+}
+
+.player-number-selection > li {
+  border-bottom: 1px solid #000;
+}
+
+.player-forms {
+
+}
+
+.player-forms > ul {
+  display: none;
+}
+
+.player-forms .display-player-types {
+  display: block;
+
+}
+
+#start-game {
+  padding: 20px;
+}
+
 canvas {
-  background-image: url('../sprites/cloud.gif');
-  background-size: cover;
 }
 
 html, body {
@@ -8,6 +105,8 @@ html, body {
 }
 
 #gameArea {
+    background-image: url('../sprites/cloud.gif');
+    background-size: cover;
     position: absolute;
 }
 
