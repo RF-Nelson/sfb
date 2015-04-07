@@ -42,59 +42,173 @@ button {
 
 /* STYLING */
 
+body {
+    background-image: url('../sprites/cloud.gif');
+    background-size: cover;
+}
+
+.white-body {
+  background: #fff;
+}
+
+/* anton.i.kulikov@gmail.com Two-N Inc.*/
+
 .game-form {
-  width: 800px;
-  height: 800px;
-  background: green;
+  width: 1040px;
+  border-radius: 10px;
+  background: #fff;
   text-align: center;
   margin: 200px auto;
+  border: 1px solid transparent;
 }
 
 .hide-menu {
   display: none;
 }
 
-.player-number-selection {
-  background: lightgray;
-  width: 400px;
-  margin: 0 auto;
-  text-align: center;
-  padding: 10px;
-  font-size: 44px;
-
-}
-
-.player-number-selection > li {
+.hidden {
   display: none;
 }
 
-.player-number-selection:hover.player-number-selection > li {
-  display: block;
-  cursor: pointer;
-  padding: 20px 10px;
-  font-size: 28px;
+.player-number-selection {
+  background: #fff;
+  border-radius: 10px;
+  width: 400px;
+  margin: 150px auto;
+  text-align: center;
+  padding: 40px 60px 0;
 
 }
 
-.player-number-selection > li {
-  border-bottom: 1px solid #000;
+.player-number-selection > h1 {
+  font-size: 44px;
+  margin-bottom: 20px;
+}
+
+.player-number-selection > ul > li {
+  border-top: 1px solid #000;
+  cursor: pointer;
+  padding: 20px 10px;
+  font-size: 24px;
+}
+
+.player-number-selection > ul > li:hover {
+  background: lightgray;
+}
+
+.toggle-players {
+  font-size: 32px;
+  border: 1px solid #000;
+  margin-top: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.toggle-players:hover {
+  background: lightgray;
 }
 
 .player-forms {
 
 }
 
-.player-forms > ul {
+.player-forms .display-players:nth-child(odd) {
+  float: left;
+}
+
+.player-forms .display-players:nth-child(even) {
+  float: right;
+}
+
+.highlight-selection {
+  background: yellow;
+}
+
+.player-forms > article {
   display: none;
 }
 
-.player-forms .display-player-types {
+.player-forms .display-players {
+  position: relative;
   display: block;
+  border: 1px solid #000;
+  border-radius: 5px;
+  width: 435px;
+  padding: 20px;
+  margin: 20px;
 
 }
 
-#start-game {
-  padding: 20px;
+.player-forms > article > ul > h4 {
+  font-size: 22px;
+  margin: 0 0 25px;
+}
+
+.player-forms > article > ul > li {
+  color: darkgray;
+  padding: 5px 0;
+}
+
+.player-forms > article > ul > li:hover {
+  color: #000;
+}
+
+.player-ready {
+  background: yellow;
+}
+
+.player-forms > article > h1 {
+  border-bottom: 1px solid #000;
+  font-size: 24px;
+  padding-bottom: 10px;
+
+}
+
+.player-forms > article > ul {
+  margin: 25px 0 60px;
+}
+
+.player-type {
+  cursor: pointer;
+}
+
+.player-fart {
+  cursor: pointer;
+}
+
+.player-forms > article #types {
+  float: left;
+  border-right: 1px solid #000;
+  padding-right: 25px;
+}
+
+.player-forms > article #farts {
+  float: right;
+  margin-right: 25px;
+}
+
+.player-forms > article > button {
+  border: 1px solid #000;
+  padding: 5px 10px;
+  border-radius: 5px;
+  position: absolute;
+  bottom: 15px;
+  left: 180px;
+
+}
+
+.hide-button {
+  display: none;
+
+}
+
+.start-game {
+  display: block;
+  padding: 10px 20px;
+  margin: 40px 463px 40px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  width: 75px;
 }
 
 canvas {

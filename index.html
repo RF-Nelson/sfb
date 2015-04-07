@@ -9,50 +9,89 @@
       <canvas id="sfb-game"></canvas>
     </div>
 
-    <section class="game-form">
-      <ul class="player-number-selection">How many players?
-        <li class="player-number" data-id="1">ONE</li>
-        <li class="player-number" data-id="2">TWO</li>
-        <li class="player-number" data-id="3">THREE</li>
-        <li class="player-number" data-id="4">FOUR</li>
-      </ul>
 
-      <ul class="player-forms">
-        <ul name="player-1">Player ONE: Select Player Type
-          <li class="player-type" data-id="1" data-type="Fast">Fast and Weak</li>
-          <li class="player-type" data-id="1" data-type="Slow">Slow and Strong</li>
-        </ul>
-        <ul name="player-1">Player ONE: Select Special Fart
-          <li class="player-fart" data-id="1" data-type="super">Super</li>
-          <li class="player-fart" data-id="1" data-type="mine">Mine</li>
-        </ul>
-        <ul name="player-2">Player TWO: Select Player Type
-          <li class="player-type" data-id="2" data-type="Fast">Fast and Weak</li>
-          <li class="player-type" data-id="2" data-type="Slow">Slow and Strong</li>
-        </ul>
-        <ul name="player-2">Player TWO: Select Special Fart
-          <li class="player-fart" data-id="2" data-type="super">Super</li>
-          <li class="player-fart" data-id="2" data-type="mine">Mine</li>
-        </ul>
-        <ul name="player-3">Player THREE: Select Player Type
-          <li class="player-type" data-id="3" data-type="Fast">Fast and Weak</li>
-          <li class="player-type" data-id="3" data-type="Slow">Slow and Strong</li>
-        </ul>
-        <ul name="player-3">Player THREE: Select Special Fart
-          <li class="player-fart" data-id="3" data-type="super">Super</li>
-          <li class="player-fart" data-id="3" data-type="mine">Mine</li>
-        </ul>
-        <ul name="player-4">Player FOUR: Select Player Type
-          <li class="player-type" data-id="4" data-type="Fast">Fast and Weak</li>
-          <li class="player-type" data-id="4" data-type="Slow">Slow and Strong</li>
-        </ul>
-        <ul name="player-4">Player FOUR: Select Special Fart
-          <li class="player-fart" data-id="4" data-type="super">Super</li>
-          <li class="player-fart" data-id="4" data-type="mine">Mine</li>
-        </ul>
-      </ul>
+    <section class="game-menu">
+        <section class="player-number-selection">
+          <h1>How many players?</h1>
+          <ul>
+            <li class="player-number" data-id="1">ONE</li>
+            <li class="player-number" data-id="2">TWO</li>
+            <li class="player-number" data-id="3">THREE</li>
+            <li class="player-number" data-id="4">FOUR</li>
+          </ul>
+        </section>
 
-      <button id="start-game">Start Game</button>
+        <section class="game-form hidden">
+          <button class="toggle-players">Change Player Number</button>
+          <h3>Choose player settings and ready up!</h3>
+          <ul class="player-forms group">
+            <article class="player-1 group">
+              <h1>PLAYER ONE</h1>
+              <ul class="player-1-types" id="types">
+                <h4>Select Player Type</h4>
+                <li class="player-type" data-id="1" data-type="Normal">Average Speed and Strength</li>
+                <li class="player-type" data-id="1" data-type="Fast">Faster but Weaker</li>
+                <li class="player-type" data-id="1" data-type="Slow">Stronger but Slower</li>
+              </ul>
+              <ul class="player-1-farts" id="farts">
+                <h4>Select Special Fart</h4>
+                <li class="player-fart" data-id="1" data-type="bouncing">Bouncing</li>
+                <li class="player-fart" data-id="1" data-type="mine">Mines</li>
+                <li class="player-fart" data-id="1" data-type="flame">Flame</li>
+              </ul>
+              <button name="ready-up" data-id="1" class="hide-button">Ready Up!</button>
+            </article>
+            <article class="player-2 group">
+              <h1>PLAYER TWO</h1>
+              <ul class="player-2-types" id="types">
+                <h4>Select Player Type</h4>
+                <li class="player-type" data-id="2" data-type="Normal">Average Speed and Strength</li>
+                <li class="player-type" data-id="2" data-type="Fast">Faster but Weaker</li>
+                <li class="player-type" data-id="2" data-type="Slow">Stronger but Slower</li>
+              </ul>
+              <ul class="player-2-farts" id="farts">
+                <h4>Select Special Fart</h4>
+                <li class="player-fart" data-id="2" data-type="super">Bouncing</li>
+                <li class="player-fart" data-id="2" data-type="mine">Mine</li>
+                <li class="player-fart" data-id="2" data-type="flame">Flame</li>
+              </ul>
+              <button name="ready-up" data-id="2" class="hide-button">Ready Up!</button>
+            </article>
+            <article class="player-3 group">
+              <h1>PLAYER THREE</h1>
+              <ul class="player-3-types" id="types">
+                <h4>Select Player Type</h4>
+                <li class="player-type" data-id="3" data-type="Normal">Average Speed and Strength</li>
+                <li class="player-type" data-id="3" data-type="Fast">Faster but Weaker</li>
+                <li class="player-type" data-id="3" data-type="Slow">Stronger but Slower</li>
+              </ul>
+              <ul class="player-3-farts" id="farts">
+                <h4>Select Special Fart</h4>
+                <li class="player-fart" data-id="3" data-type="super">Bouncing</li>
+                <li class="player-fart" data-id="3" data-type="mine">Mine</li>
+                <li class="player-fart" data-id="3" data-type="flame">Flame</li>
+              </ul>
+              <button name="ready-up" data-id="3" class="hide-button">Ready Up!</button>
+            </article>
+            <article class="player-4 group">
+              <h1>PLAYER FOUR</h1>
+              <ul class="player-4-types" id="types">
+                <h4>Select Player Type</h4>
+                <li class="player-type" data-id="4" data-type="Normal">Average Speed and Strength</li>
+                <li class="player-type" data-id="4" data-type="Fast">Faster but Weaker</li>
+                <li class="player-type" data-id="4" data-type="Slow">Stronger but Slower</li>
+              </ul>
+              <ul class="player-4-farts" id="farts">
+                <h4>Select Special Fart</h4>
+                <li class="player-fart" data-id="4" data-type="super">Bouncing</li>
+                <li class="player-fart" data-id="4" data-type="mine">Mine</li>
+                <li class="player-fart" data-id="4" data-type="flame">Flame</li>
+              </ul>
+              <button name="ready-up" data-id="4" class="hide-button">Ready Up!</button>
+            </article>
+          </ul>
+        <button name="start-game" class="hide-button">Start Game</button>
+      </section>
     </section>
 
     <script src="vendor/jquery-2.1.1.js"></script>
@@ -98,51 +137,82 @@
         /* Store the players and their attrs in an object that will then be passed to the new game*/
 
         PLAYERS = {};
+        READYPLAYERS = [];
 
         /* EVENT LISTENERS */
 
         /* Get player number*/
         var addPlayers = function (event) {
           var target = $(event.currentTarget),
-              players = target.data('id');
+              players = target.data('id'),
+              menu = document.getElementsByClassName('player-number-selection'),
+              attrsMenu = document.getElementsByClassName('game-form');
 
+              menu[0].classList.add('hidden');
+              attrsMenu[0].classList.remove('hidden');
+
+          PLAYERS = {};
           for(var i = 1; i <= 4; i ++) {
-            PLAYERS[i] = null;
-            var playerChoices = document.getElementsByName('player-' + i);
+            var playerChoices = document.getElementsByClassName('player-' + i);
 
             for(var j = 0; j < playerChoices.length; j ++) {
-              playerChoices[j].classList.remove('display-player-types');
+              playerChoices[j].classList.remove('display-players');
             }
           }
 
           for(var i = 1; i <= players; i ++) {
-            var playerChoices = document.getElementsByName('player-' + i);
+            var playerChoices = document.getElementsByClassName('player-' + i);
             PLAYERS[i] = { attrs: {} };
 
             for(var j = 0; j < playerChoices.length; j ++) {
-              playerChoices[j].classList.add('display-player-types');
+              playerChoices[j].classList.add('display-players');
 
-            }
-          }
-        }
+            };
+          };
+        };
 
         var playerNumbers = document.getElementsByClassName('player-number');
         for(var i = 0; i < playerNumbers.length; i ++) {
           playerNumbers[i].addEventListener('click', addPlayers);
         }
 
+        /* Change Player Number */
+        var togglePlayers = function(options) {
+          menu = document.getElementsByClassName('player-number-selection'),
+          attrsMenu = document.getElementsByClassName('game-form');
+
+          menu[0].classList.remove('hidden');
+          attrsMenu[0].classList.add('hidden');
+
+        };
+
+        var changePlayerButton = document.getElementsByClassName('toggle-players');
+        changePlayerButton[0].addEventListener('click', togglePlayers);
+
         /* Get player speed/health setting */
-        var addPlayerstype = function (event) {
+        var addPlayersType = function (event) {
           var target = $(event.currentTarget),
               player = target.data('id'),
               playerType = target.data('type');
+          var playerTypes = $( "ul.player-" + player + "-types > li");
+
+          for(var j = 0; j < playerTypes.length; j ++) {
+            playerTypes[j].classList.remove('highlight-selection');
+          }
+
+          target[0].classList.add('highlight-selection');
 
           PLAYERS[player]['attrs']['type'] = playerType;
+
+          if (Object.keys(PLAYERS[player]['attrs']).length === 2) {
+            var readyButton = $( "article.player-" + player + "> button");
+            readyButton[0].classList.remove('hide-button');
+          }
         }
 
         var playersType = document.getElementsByClassName('player-type');
         for(var i = 0; i < playersType.length; i ++) {
-          playersType[i].addEventListener('click', addPlayerstype);
+          playersType[i].addEventListener('click', addPlayersType);
         }
 
 
@@ -152,7 +222,21 @@
               player = target.data('id'),
               playerFart = target.data('type');
 
+          var playerFarts = $( "ul.player-" + player + "-farts > li");
+
+          for(var j = 0; j < playerFarts.length; j ++) {
+            playerFarts[j].classList.remove('highlight-selection');
+          }
+
+
+          target[0].classList.add('highlight-selection');
+
           PLAYERS[player]['attrs']['fart'] = playerFart;
+
+          if (Object.keys(PLAYERS[player]['attrs']).length === 2) {
+            var readyButton = $( "article.player-" + player + "> button");
+            readyButton[0].classList.remove('hide-button');
+          }
         }
 
         var playersFart = document.getElementsByClassName('player-fart');
@@ -160,20 +244,45 @@
           playersFart[i].addEventListener('click', addPlayersFart);
         }
 
-        /* Start Game */
-        var readyGame = function(options) {
-          game = new SFB.Game(PLAYERS);
-          // document.getElementByClassName('game-form').html();
-          var menu = document.getElementsByClassName('game-form')[0];
-          menu.classList.add('hide-menu');
+        /* Ready up */
+        var readyPlayer = function() {
+          var target = $(event.currentTarget),
+              playerNumber = target.data('id'),
+              player = document.getElementsByClassName('player-' + playerNumber)[0];
 
+          player.classList.add('player-ready');
+          READYPLAYERS.push(player);
 
-          startGame();
+          if (Object.keys(PLAYERS).length === READYPLAYERS.length) {
+            var startButton = document.getElementsByName('start-game');
+            startButton[0].classList.remove('hide-button');
+            startButton[0].classList.add('start-game');
+
+          }
 
         };
 
-        var startButton = document.getElementById('start-game');
-        startButton.addEventListener('click', readyGame);
+        var readyButton = document.getElementsByName('ready-up');
+        for(var i = 0; i < readyButton.length; i ++) {
+          readyButton[i].addEventListener('click', readyPlayer);
+        }
+
+        /* Start Game */
+        var readyGame = function(options) {
+          if (Object.keys(PLAYERS).length === READYPLAYERS.length) {
+            game = new SFB.Game(PLAYERS);
+            var menu = document.getElementsByClassName('game-menu')[0];
+            menu.classList.add('hide-menu');
+
+            startGame();
+            var body = $("body");
+            body[0].classList.add('white-body');
+
+          }
+        };
+
+        var startButton = document.getElementsByName('start-game');
+        startButton[0].addEventListener('click', readyGame);
 
 
 

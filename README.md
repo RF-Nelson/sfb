@@ -19,6 +19,7 @@
 * "chance" powerups that may not always be beneficial
 * network play
 * additional levels
+* add 2v2 team game mode
 
 
 ## DONE ##
