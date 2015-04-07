@@ -12,6 +12,8 @@
 
     <section class="game-menu">
         <section class="player-number-selection">
+          <button id="start-game-test">Start Testing Game</button>
+
           <h1>How many players?</h1>
           <ul>
             <li class="player-number" data-id="1">ONE</li>
@@ -94,6 +96,8 @@
       </section>
     </section>
 
+
+
     <script src="vendor/jquery-2.1.1.js"></script>
     <script type="application/javascript" src="vendor/keymaster.js"></script>
 
@@ -109,6 +113,7 @@
     <script type="application/javascript" src="lib/gnome.js"></script>
     <script type="application/javascript" src="lib/scene.js"></script>
     <script type="application/javascript" src="lib/fart.js"></script>
+    <script type="application/javascript" src="lib/bounceFart.js"></script>
     <script type="application/javascript" src="lib/bean.js"></script>
 
     <script type="application/javascript" src="lib/fartCloud.js"></script>
@@ -128,6 +133,8 @@
         var ctx = canvasEl.getContext("2d");
         var that = this;
         var startGame = function() {
+          var body = $("body");
+          body[0].classList.add('white-body');
           if (that.game.spritesStillLoading > 0) {
             setTimeout(startGame(), 100)
           } else {
@@ -284,6 +291,11 @@
 
         var startButton = document.getElementsByName('start-game');
         startButton[0].addEventListener('click', readyGame);
+
+        var startButton = document.getElementById('start-game-test');
+        startButton.addEventListener('click', startGame);
+        game = new SFB.Game(PLAYERS);
+
 
 
 
