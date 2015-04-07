@@ -1125,7 +1125,7 @@ Fireworks.EffectsStackBuilder.prototype.renderToCanvas	= function(opts)
 
 
 	if( opts.type === 'arc' )		ctorTypeArc(effect);
-	else if( opts.type === 'drawImage' )	ctorTypeDrawImage(effect);
+	else if( opts.type === 'drawImage' )	ctorTypeDrawImage(effect, opts.scale);
 	else{
 		console.assert(false, 'renderToCanvas opts.type is invalid: ');
 	}
@@ -1164,7 +1164,7 @@ Fireworks.EffectsStackBuilder.prototype.renderToCanvas	= function(opts)
 			ctx.fill();
 		});
 	};
-	function ctorTypeDrawImage(){
+	function ctorTypeDrawImage(effect, scaling){
 		// handle parameter polymorphism
 		if( typeof(opts.image) === 'string' ){
 			var images	= [new Image];
@@ -1182,7 +1182,7 @@ Fireworks.EffectsStackBuilder.prototype.renderToCanvas	= function(opts)
 				rotation	: 0*Math.PI
 			};
 		}).onRender(function(particle){
-			var canvas = document.getElementById('sfb-game')
+			var canvas = document.getElementById('fireworks')
 			var position	= particle.position.vector;
 			var data	= particle.renderToCanvas;
 			var canonAge	= particle.lifeTime.normalizedAge();
@@ -1193,7 +1193,7 @@ Fireworks.EffectsStackBuilder.prototype.renderToCanvas	= function(opts)
 			// translate in canvas's center, and the particle position
 			ctx.translate(position.x + canvas.width/2, position.y + canvas.height/2);
 			// set the scale of this particles
-			ctx.scale(1, 1);
+			ctx.scale(scaling, scaling);
 			// set the rotation
 			ctx.rotate(data.rotation);
 			// set ctx.globalAlpha

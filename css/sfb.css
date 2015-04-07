@@ -15,6 +15,7 @@ span, article, footer, time, small {
   vertical-align: inherit;
   box-sizing: inherit;
   background: transparent;
+  z-index: 0;
 }
 
 ul {
@@ -222,9 +223,14 @@ html, body {
     background-image: url('../sprites/cloud.gif');
     background-size: cover;
     position: absolute;
+    z-index: 3;
 }
 
-#sfb-game {
+#fireworks {
+    z-index: 50;
+}
+
+canvas {
     position: absolute;
     width: 100%;
     height: 100%;
