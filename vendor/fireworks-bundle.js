@@ -1100,7 +1100,7 @@ Fireworks.EffectsStackBuilder.prototype.spawnerSteadyRate	= function(rate)
 		var nParticles	= Math.floor(nToCreate);
 		// dont spawn more particles than available
 		// TODO here estimate how much more is needed to never lack of it
-		nParticles	= Math.min(nParticles, emitter.deadParticles().length);
+		// nParticles	= Math.min(nParticles, emitter.deadParticles().length);
 		// update nToCreate
 		nToCreate	-= nParticles;
 		// spawn each particle
@@ -1341,7 +1341,6 @@ Fireworks.Emitter.prototype.bindTriggerDomEvents	= function(domElement){
 }
 
 Fireworks.BindTriggerDomEvents	= function(emitter, domElement){
-
 	this._domElement= domElement	|| document.body;
 	// bind mouse event
 
@@ -1351,7 +1350,6 @@ Fireworks.BindTriggerDomEvents	= function(emitter, domElement){
                                         0, "x".charCodeAt (0));
 
 	this._onMouseDown	= function(){
-		debugger
 		emitter.effect('spawner').opts.start();
 		console.log('test');
 		};

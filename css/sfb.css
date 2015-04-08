@@ -44,7 +44,7 @@ button {
 /* STYLING */
 
 body {
-    background-image: url('../sprites/cloudOLD.gif');
+    background-image: url('../sprites/cloud.gif');
     background-size: cover;
 }
 
@@ -61,7 +61,6 @@ body {
   text-align: center;
   margin: 200px auto;
   border: 1px solid transparent;
-
 }
 
 .hide-menu {
