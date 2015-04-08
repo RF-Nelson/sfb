@@ -1341,21 +1341,23 @@ Fireworks.Emitter.prototype.bindTriggerDomEvents	= function(domElement){
 }
 
 Fireworks.BindTriggerDomEvents	= function(emitter, domElement){
-	this._domElement= domElement	|| document.body;
 
+	this._domElement= domElement	|| document.body;
 	// bind mouse event
 
-	var pressEvent = document.createEvent ("KeyboardEvent");
-                pressEvent.initKeyEvent ("keypress", true, true, window,
+	var pressEvent = document.createEvent("KeyboardEvent");
+      pressEvent.initKeyboardEvent("keypress", true, true, window,
                                         false, false, false, false,
                                         0, "x".charCodeAt (0));
 
 	this._onMouseDown	= function(){
+		debugger
 		emitter.effect('spawner').opts.start();
 		console.log('test');
 		};
 	this._onMouseUp		= function(){ emitter.effect('spawner').opts.stop();	};
-	this._domElement.addEventListener('mousdown'	, this._onMouseDown	);
+	this._domElement.addEventListener('mousedown'	, this._onMouseDown	);
+	this._domElement.addEventListener(pressEvent, this._onMouseDown )
 	this._domElement.addEventListener('mouseup'	, this._onMouseUp	);
 
 	// change emitter intensity on mousewheel
