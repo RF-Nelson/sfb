@@ -146,7 +146,7 @@
 
         /* Store the players and their attrs in an object that will then be passed to the new game*/
 
-        PLAYERS = {};
+        // PLAYERS = {};
         READYPLAYERS = [];
 
         /* EVENT LISTENERS */
@@ -278,10 +278,23 @@
         }
 
         /* Start Game */
+        // var readyGame = function(options) {
+        //   var numPlayers = Object.keys(PLAYERS).length
+        //   if (numPlayers === READYPLAYERS.length) {
+        //     game = new SFB.Game(numPlayers);
+        //     var menu = document.getElementsByClassName('game-menu')[0];
+        //     menu.classList.add('hide-menu');
+        //
+        //     startGame();
+        //     var body = $("body");
+        //     body[0].classList.add('white-body');
+        //
+        //   }
+        // };
+
         var readyGame = function(options) {
           var numPlayers = Object.keys(PLAYERS).length
-          if (numPlayers === READYPLAYERS.length) {
-            game = new SFB.Game(numPlayers);
+            game = new SFB.Game(2);
             var menu = document.getElementsByClassName('game-menu')[0];
             menu.classList.add('hide-menu');
 
@@ -289,14 +302,17 @@
             var body = $("body");
             body[0].classList.add('white-body');
 
-          }
         };
 
         var startButton = document.getElementsByName('start-game');
         startButton[0].addEventListener('click', readyGame);
 
-        // var startButton = document.getElementById('start-game-test');
-        // startButton.addEventListener('click', startGame);
+
+        PLAYERS = { 1: { attrs: {fart: "Bounce", playerType: "Normal" }}, 2: {attrs: {fart: "Bounce", playerType: "Normal" }}}
+
+        var startButton = document.getElementById('start-game-test');
+        startButton.addEventListener('click', readyGame);
+
         // game = new SFB.Game(PLAYERS);
 
 
