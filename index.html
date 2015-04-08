@@ -37,9 +37,9 @@
               </ul>
               <ul class="player-1-farts" id="farts">
                 <h4>Select Special Fart</h4>
-                <li class="player-fart" data-id="1" data-type="bouncing">Bouncing</li>
-                <li class="player-fart" data-id="1" data-type="mine">Mines</li>
-                <li class="player-fart" data-id="1" data-type="flame">Flame</li>
+                <li class="player-fart" data-id="1" data-type="Bounce">Bouncing</li>
+                <li class="player-fart" data-id="1" data-type="Mine">Mines</li>
+                <li class="player-fart" data-id="1" data-type="Flame">Flame</li>
               </ul>
               <button name="ready-up" data-id="1" class="hide-button">Ready Up!</button>
             </article>
@@ -53,9 +53,9 @@
               </ul>
               <ul class="player-2-farts" id="farts">
                 <h4>Select Special Fart</h4>
-                <li class="player-fart" data-id="2" data-type="super">Bouncing</li>
-                <li class="player-fart" data-id="2" data-type="mine">Mine</li>
-                <li class="player-fart" data-id="2" data-type="flame">Flame</li>
+                <li class="player-fart" data-id="2" data-type="Bounce">Bouncing</li>
+                <li class="player-fart" data-id="2" data-type="Mine">Mine</li>
+                <li class="player-fart" data-id="2" data-type="Flame">Flame</li>
               </ul>
               <button name="ready-up" data-id="2" class="hide-button">Ready Up!</button>
             </article>
@@ -69,9 +69,9 @@
               </ul>
               <ul class="player-3-farts" id="farts">
                 <h4>Select Special Fart</h4>
-                <li class="player-fart" data-id="3" data-type="super">Bouncing</li>
-                <li class="player-fart" data-id="3" data-type="mine">Mine</li>
-                <li class="player-fart" data-id="3" data-type="flame">Flame</li>
+                <li class="player-fart" data-id="3" data-type="Bounce">Bouncing</li>
+                <li class="player-fart" data-id="3" data-type="Mine">Mine</li>
+                <li class="player-fart" data-id="3" data-type="Flame">Flame</li>
               </ul>
               <button name="ready-up" data-id="3" class="hide-button">Ready Up!</button>
             </article>
@@ -85,9 +85,9 @@
               </ul>
               <ul class="player-4-farts" id="farts">
                 <h4>Select Special Fart</h4>
-                <li class="player-fart" data-id="4" data-type="super">Bouncing</li>
-                <li class="player-fart" data-id="4" data-type="mine">Mine</li>
-                <li class="player-fart" data-id="4" data-type="flame">Flame</li>
+                <li class="player-fart" data-id="4" data-type="Bounce">Bouncing</li>
+                <li class="player-fart" data-id="4" data-type="Mine">Mine</li>
+                <li class="player-fart" data-id="4" data-type="Flame">Flame</li>
               </ul>
               <button name="ready-up" data-id="4" class="hide-button">Ready Up!</button>
             </article>
@@ -212,7 +212,7 @@
 
           target[0].classList.add('highlight-selection');
 
-          PLAYERS[player]['attrs']['type'] = playerType;
+          PLAYERS[player]['attrs']['playerType'] = playerType;
 
           if (Object.keys(PLAYERS[player]['attrs']).length === 2) {
             var readyButton = $( "article.player-" + player + "> button");
@@ -279,8 +279,9 @@
 
         /* Start Game */
         var readyGame = function(options) {
-          if (Object.keys(PLAYERS).length === READYPLAYERS.length) {
-            game = new SFB.Game(PLAYERS);
+          var numPlayers = Object.keys(PLAYERS).length
+          if (numPlayers === READYPLAYERS.length) {
+            game = new SFB.Game(numPlayers);
             var menu = document.getElementsByClassName('game-menu')[0];
             menu.classList.add('hide-menu');
 
@@ -294,9 +295,9 @@
         var startButton = document.getElementsByName('start-game');
         startButton[0].addEventListener('click', readyGame);
 
-        var startButton = document.getElementById('start-game-test');
-        startButton.addEventListener('click', startGame);
-        game = new SFB.Game(PLAYERS);
+        // var startButton = document.getElementById('start-game-test');
+        // startButton.addEventListener('click', startGame);
+        // game = new SFB.Game(PLAYERS);
 
 
 
