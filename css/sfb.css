@@ -284,6 +284,11 @@ html, body {
     z-index: 50;
 }
 
+#flamethrower {
+    z-index: 50;
+
+}
+
 canvas {
     position: absolute;
     width: 100%;

@@ -1100,7 +1100,7 @@ Fireworks.EffectsStackBuilder.prototype.spawnerSteadyRate	= function(rate)
 		var nParticles	= Math.floor(nToCreate);
 		// dont spawn more particles than available
 		// TODO here estimate how much more is needed to never lack of it
-		nParticles	= Math.min(nParticles, emitter.deadParticles().length);
+		// nParticles	= Math.min(nParticles, emitter.deadParticles().length);
 		// update nToCreate
 		nToCreate	-= nParticles;
 		// spawn each particle
@@ -1342,11 +1342,20 @@ Fireworks.Emitter.prototype.bindTriggerDomEvents	= function(domElement){
 
 Fireworks.BindTriggerDomEvents	= function(emitter, domElement){
 	this._domElement= domElement	|| document.body;
-
 	// bind mouse event
-	this._onMouseDown	= function(){ emitter.effect('spawner').opts.start();	};
+
+	var pressEvent = document.createEvent("KeyboardEvent");
+      pressEvent.initKeyboardEvent("keypress", true, true, window,
+                                        false, false, false, false,
+                                        0, "x".charCodeAt (0));
+
+	this._onMouseDown	= function(){
+		emitter.effect('spawner').opts.start();
+		console.log('test');
+		};
 	this._onMouseUp		= function(){ emitter.effect('spawner').opts.stop();	};
 	this._domElement.addEventListener('mousedown'	, this._onMouseDown	);
+	this._domElement.addEventListener(pressEvent, this._onMouseDown )
 	this._domElement.addEventListener('mouseup'	, this._onMouseUp	);
 
 	// change emitter intensity on mousewheel
