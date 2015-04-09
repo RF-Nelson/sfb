@@ -52,6 +52,11 @@
                 <li class="player-fart" data-id="1" data-type="Mine">Mines</li>
                 <li class="player-fart" data-id="1" data-type="Flame">Flame</li>
               </ul>
+              <ul class="player-1-teams" id="teams">
+                <h4>Select Team</h4>
+                <li class="player-team" data-id="1" data-type="1">Team 1</li>
+                <li class="player-team" data-id="1" data-type="2">Team 2</li>
+              </ul>
               <button name="ready-up" data-id="1" class="hide-button">Ready Up!</button>
             </article>
             <article class="player-2 group">
@@ -67,6 +72,11 @@
                 <li class="player-fart" data-id="2" data-type="Bounce">Bouncing</li>
                 <li class="player-fart" data-id="2" data-type="Mine">Mine</li>
                 <li class="player-fart" data-id="2" data-type="Flame">Flame</li>
+              </ul>
+              <ul class="player-2-teams" id="teams">
+                <h4>Select Team</h4>
+                <li class="player-team" data-id="2" data-type="1">Team 1</li>
+                <li class="player-team" data-id="2" data-type="2">Team 2</li>
               </ul>
               <button name="ready-up" data-id="2" class="hide-button">Ready Up!</button>
             </article>
@@ -84,6 +94,11 @@
                 <li class="player-fart" data-id="3" data-type="Mine">Mine</li>
                 <li class="player-fart" data-id="3" data-type="Flame">Flame</li>
               </ul>
+              <ul class="player-3-teams" id="teams">
+                <h4>Select Team</h4>
+                <li class="player-team" data-id="3" data-type="1">Team 1</li>
+                <li class="player-team" data-id="3" data-type="2">Team 2</li>
+              </ul>
               <button name="ready-up" data-id="3" class="hide-button">Ready Up!</button>
             </article>
             <article class="player-4 group">
@@ -99,6 +114,11 @@
                 <li class="player-fart" data-id="4" data-type="Bounce">Bouncing</li>
                 <li class="player-fart" data-id="4" data-type="Mine">Mine</li>
                 <li class="player-fart" data-id="4" data-type="Flame">Flame</li>
+              </ul>
+              <ul class="player-4-teams" id="teams">
+                <h4>Select Team</h4>
+                <li class="player-team" data-id="4" data-type="1">Team 1</li>
+                <li class="player-team" data-id="4" data-type="2">Team 2</li>
               </ul>
               <button name="ready-up" data-id="4" class="hide-button">Ready Up!</button>
             </article>
@@ -160,23 +180,41 @@
 
         /* Store the players and their attrs in an object that will then be passed to the new game*/
 
-        // PLAYERS = {};
+        PLAYERS = {};
         READYPLAYERS = [];
+
 
         /* EVENT LISTENERS */
 
-        /* Multiplayer Menu */
+        /* Free For All Menu */
         var addFreeForAllMenu = function () {
+          /* Handle team number designation */
           var openingScreen = document.getElementsByClassName('opening-screen'),
               multiplayerScreen = document.getElementsByClassName('player-number-selection');
 
           openingScreen[0].classList.add('hidden');
           multiplayerScreen[0].classList.remove('hidden');
-
+          showTeams = false;
+          gameMode = 'Free';
         }
 
         var menuButton = document.getElementById('free-for-all-menu');
         menuButton.addEventListener('click', addFreeForAllMenu);
+
+        /* Team Deathmatch Menu */
+        var addTeamDeathMatchMenu = function () {
+          var openingScreen = document.getElementsByClassName('opening-screen'),
+              multiplayerScreen = document.getElementsByClassName('player-number-selection');
+
+          openingScreen[0].classList.add('hidden');
+          multiplayerScreen[0].classList.remove('hidden');
+          showTeams = true;
+          gameMode = 'Team';
+
+        }
+
+        var menuButton = document.getElementById('team-death-match-menu');
+        menuButton.addEventListener('click', addTeamDeathMatchMenu);
 
         /* About Page */
         var addAboutPage = function () {
@@ -185,7 +223,6 @@
 
           openingScreen[0].classList.add('hidden');
           aboutPage[0].classList.remove('hidden');
-
         }
 
         var aboutButton = document.getElementById('open-about-page');
@@ -198,7 +235,6 @@
 
           openingScreen[0].classList.remove('hidden');
           aboutPage[0].classList.add('hidden');
-
         }
 
         var backToMainButton = document.getElementById('back-to-main-button');
@@ -215,23 +251,17 @@
               menu[0].classList.add('hidden');
               attrsMenu[0].classList.remove('hidden');
 
-          PLAYERS = {};
-          for(var i = 1; i <= 4; i ++) {
-            var playerChoices = document.getElementsByClassName('player-' + i);
-
-            for(var j = 0; j < playerChoices.length; j ++) {
-              playerChoices[j].classList.remove('display-players');
-            }
-          }
-
           for(var i = 1; i <= players; i ++) {
             var playerChoices = document.getElementsByClassName('player-' + i);
             PLAYERS[i] = { attrs: {} };
 
-            for(var j = 0; j < playerChoices.length; j ++) {
-              playerChoices[j].classList.add('display-players');
-
-            };
+            playerChoices[0].classList.add('display-players');
+              /* If game mode is free for all then hide team selection and assign each player to a different team.*/
+              if (!showTeams) {
+                var displayTeam = document.getElementsByClassName('player-' + i + '-teams');
+                displayTeam[0].classList.add('hidden');
+                PLAYERS[i]['attrs']['playerTeam'] = i;
+              }
           };
         };
 
@@ -268,7 +298,7 @@
 
           PLAYERS[player]['attrs']['playerType'] = playerType;
 
-          if (Object.keys(PLAYERS[player]['attrs']).length === 2) {
+          if (Object.keys(PLAYERS[player]['attrs']).length === 3) {
             var readyButton = $( "article.player-" + player + "> button");
             readyButton[0].classList.remove('hide-button');
           }
@@ -297,16 +327,45 @@
 
           PLAYERS[player]['attrs']['fart'] = playerFart;
 
-          if (Object.keys(PLAYERS[player]['attrs']).length === 2) {
+          if (Object.keys(PLAYERS[player]['attrs']).length === 3) {
             var readyButton = $( "article.player-" + player + "> button");
             readyButton[0].classList.remove('hide-button');
           }
         }
 
         var playersFart = document.getElementsByClassName('player-fart');
-        for(var i = 0; i < playersType.length; i ++) {
+        for(var i = 0; i < playersFart.length; i ++) {
           playersFart[i].addEventListener('click', addPlayersFart);
         }
+
+        /* Get Player Team */
+        var addPlayersTeam = function (event) {
+          var target = $(event.currentTarget),
+              player = target.data('id'),
+              playerTeam = target.data('type');
+
+          var playerTeams = $( "ul.player-" + player + "-teams > li");
+
+          for(var j = 0; j < playerTeams.length; j ++) {
+            playerTeams[j].classList.remove('highlight-selection');
+          }
+
+
+          target[0].classList.add('highlight-selection');
+
+          PLAYERS[player]['attrs']['playerTeam'] = playerTeam;
+
+          if (Object.keys(PLAYERS[player]['attrs']).length === 3) {
+            var readyButton = $( "article.player-" + player + "> button");
+            readyButton[0].classList.remove('hide-button');
+          }
+        }
+
+        var playersTeam = document.getElementsByClassName('player-team');
+        for(var i = 0; i < playersTeam.length; i ++) {
+          playersTeam[i].addEventListener('click', addPlayersTeam);
+        }
+
 
         /* Ready up */
         var readyPlayer = function() {
@@ -321,9 +380,7 @@
             var startButton = document.getElementsByName('start-game');
             startButton[0].classList.remove('hide-button');
             startButton[0].classList.add('start-game');
-
           }
-
         };
 
         var readyButton = document.getElementsByName('ready-up');
@@ -332,23 +389,10 @@
         }
 
         /* Start Game */
-        // var readyGame = function(options) {
-        //   var numPlayers = Object.keys(PLAYERS).length
-        //   if (numPlayers === READYPLAYERS.length) {
-        //     game = new SFB.Game(numPlayers);
-        //     var menu = document.getElementsByClassName('game-menu')[0];
-        //     menu.classList.add('hide-menu');
-        //
-        //     startGame();
-        //     var body = $("body");
-        //     body[0].classList.add('white-body');
-        //
-        //   }
-        // };
-
         var readyGame = function(options) {
           var numPlayers = Object.keys(PLAYERS).length
-            game = new SFB.Game(2);
+          if (numPlayers === READYPLAYERS.length) {
+            game = new SFB.Game(numPlayers);
             var menu = document.getElementsByClassName('game-menu')[0];
             menu.classList.add('hide-menu');
 
@@ -356,16 +400,31 @@
             var body = $("body");
             body[0].classList.add('white-body');
 
+          }
         };
 
         var startButton = document.getElementsByName('start-game');
         startButton[0].addEventListener('click', readyGame);
 
+        // var readyGame = function(options) {
+        //   var numPlayers = Object.keys(PLAYERS).length
+        //     game = new SFB.Game(2);
+        //     var menu = document.getElementsByClassName('game-menu')[0];
+        //     menu.classList.add('hide-menu');
+        //
+        //     startGame();
+        //     var body = $("body");
+        //     body[0].classList.add('white-body');
+        //
+        // };
 
-        PLAYERS = { 1: { attrs: {fart: "Bounce", playerType: "Normal" }}, 2: {attrs: {fart: "Bounce", playerType: "Normal" }}}
 
-        var startButton = document.getElementById('start-game-test');
-        startButton.addEventListener('click', readyGame);
+
+
+        // PLAYERS = { 1: { attrs: {fart: "Bounce", playerType: "Normal" }}, 2: {attrs: {fart: "Bounce", playerType: "Normal" }}}
+        //
+        // var startButton = document.getElementById('start-game-test');
+        // startButton.addEventListener('click', readyGame);
 
         // game = new SFB.Game(PLAYERS);
 
