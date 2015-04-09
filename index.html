@@ -12,7 +12,10 @@
 
     <section class="game-menu">
       <section class="opening-screen">
-        <img src="css/images/sfb.gif" id="logo" />
+        <div class="logo">
+          <img src="css/images/SFB.png" alt="" />
+
+        </div>
         <button id="free-for-all-menu"><img src="css/images/freeForAll.png" alt="" /></button>
         <button id="team-death-match-menu"><img src="css/images/TEAMdEATHMATCH.png" alt="" /></button>
         <button id="open-about-page"><img src="css/images/about.png" alt="" /></button>
@@ -27,8 +30,6 @@
           <button id="back-to-main-button">Back</button>
         </article>
         <section class="player-number-selection hidden">
-          <button id="start-game-test">Start Testing Game</button>
-
           <h1>How many players?</h1>
           <ul>
             <li class="player-number" data-id="1">ONE</li>
@@ -127,24 +128,32 @@
               <button name="ready-up" data-id="4" class="hide-button">Ready Up!</button>
             </article>
           </ul>
+          <article class="controls">
+            <h1>Controls</h1>
+            <ul>
+              <li>Left Trigger: Fart Pack</li>
+              <li>Right Trigger: Jump</li>
+              <li>'A' Button: Standard Fart</li>
+              <li>'B' Button: Special Fart</li>
+            </ul>
+          </article>
         <button name="start-game" class="hide-button">Start Game</button>
       </section>
     </section>
 
-    <section class="closing-screen-free hidden">
-      <ul class="closing-items">
+    <section class="closing-screen hidden">
+      <h1 class="closing-screen-winner"></h1>
         <section class="individual-player-stats">
 
         </section>
-      </ul>
+        <button id="new-game-button">New Game</button>
     </section>
 
     <section class="closing-screen-team hidden">
-      <ul class="closing-items">
+      <h1 class="closing-screen-winner"></h1>
         <section class="individual-player-stats">
 
         </section>
-      </ul>
     </section>
 
 
@@ -186,7 +195,7 @@
           // STORE ARRAY OF GAMEPADS IN GLOBAL OBJECT
           window.gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
         }, 20)
-        
+
         canvasEl.width = SFB.Game.DIM_X;
         canvasEl.height = SFB.Game.DIM_Y;
         var ctx = canvasEl.getContext("2d");
@@ -209,6 +218,14 @@
 
 
         /* EVENT LISTENERS */
+
+        /* Start New Game After Ending*/
+        var loadNewGame = function () {
+          location.reload();
+        }
+        var newGameButton = document.getElementById('new-game-button');
+        newGameButton.addEventListener('click', loadNewGame);
+
 
         /* Free For All Menu */
         var addFreeForAllMenu = function () {
@@ -429,31 +446,6 @@
 
         var startButton = document.getElementsByName('start-game');
         startButton[0].addEventListener('click', readyGame);
-
-        // var readyGame = function(options) {
-        //   var numPlayers = Object.keys(PLAYERS).length
-        //     game = new SFB.Game(2);
-        //     var menu = document.getElementsByClassName('game-menu')[0];
-        //     menu.classList.add('hide-menu');
-        //
-        //     startGame();
-        //     var body = $("body");
-        //     body[0].classList.add('white-body');
-        //
-        // };
-
-
-
-
-        // PLAYERS = { 1: { attrs: {fart: "Bounce", playerType: "Normal" }}, 2: {attrs: {fart: "Bounce", playerType: "Normal" }}}
-        //
-        // var startButton = document.getElementById('start-game-test');
-        // startButton.addEventListener('click', readyGame);
-
-        // game = new SFB.Game(PLAYERS);
-
-
-
 
       })();
     </script>

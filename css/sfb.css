@@ -52,6 +52,12 @@ body {
   background: #fff;
 }
 
+.logo {
+  position: absolute;
+  left: 100px;
+  top: 20px;
+}
+
 /* anton.i.kulikov@gmail.com Two-N Inc.*/
 
 .game-menu {
@@ -72,20 +78,34 @@ body {
     position: absolute;
 }
 
+.controls {
+  width: 300px;
+  border: 1px solid #000;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.controls > h1 {
+  font-size: 50px;
+  border-bottom: 1px solid#000;
+  margin-bottom: 30px;
+}
+
 #free-for-all-menu {
-  top: 0px;
-  right: 80px;
+  top: 140px;
+  right: 150px;
 
 }
 
 #team-death-match-menu {
-  top: 215px;
-  right: 80px;
+  top: 310px;
+  right: 30px;
 }
 
 #open-about-page {
-  bottom: 0;
-  right: 100px;
+  bottom: 10px;
+  right: 200px;
 }
 
 .about-page {
@@ -300,14 +320,20 @@ body {
 }
 
 .player-forms > article > button {
-  border: 1px solid #000;
+  border: 1px solid #D816C4;
   padding: 5px 10px;
   border-radius: 5px;
   position: absolute;
   bottom: 15px;
-  left: 180px;
-
+  left: 185px;
+  color: #D816C4;
 }
+
+.player-forms > article > button:hover {
+  color: #fff;
+  background: #D816C4
+}
+
 
 .hide-button {
   display: none;
@@ -318,9 +344,81 @@ body {
   display: block;
   padding: 10px 20px;
   margin: 40px 463px 40px;
-  border: 1px solid #000;
+  border: 1px solid #D816C4;
   border-radius: 5px;
   width: 75px;
+  color: #D816C4;
+  background: #fff;
+}
+
+.start-game:hover {
+  color: #fff;
+  background: #D816C4;
+}
+
+.closing-screen {
+  margin: 100px auto;
+  background: #08E8DE;
+  position: relative;
+  width: 560px;
+  height: auto;
+  min-height: 400px;
+  border-radius: 20px;
+  padding: 0 50px 50px 50px;
+}
+
+.closing-screen > h1 {
+  color: #fff;
+  font-size: 62px;
+  font-family: fantasy;
+  font-weight: bold;
+  margin: 0 91px;
+  border-bottom: 1px solid #fff;
+  padding-top: 20px;
+}
+
+.closing-screen .individual-player-stats > ul{
+
+  position: relative;
+  display: block;
+  border: 1px solid #fff;
+  color: yellow;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 24px;
+  width: 435px;
+  padding: 20px;
+  margin: 20px;
+}
+
+.closing-screen .individual-player-stats > ul:last-child{
+  margin-bottom: 40px;
+}
+
+.closing-screen > button {
+  position: absolute;
+  bottom: 10px;
+  left: 41%;
+  background: #fff;
+  padding: 5px 10px;
+  color: #D816C4;
+  width: 100px;
+  border-radius: 5px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.closing-screen > button:hover {
+  position: absolute;
+  bottom: 10px;
+  left: 41%;
+  background: #D816C4;
+  padding: 5px 10px;
+  color: #fff;
+  width: 100px;
+  border-radius: 5px;
+  font-size: 18px;
+  text-align: center;
 }
 
 canvas {
