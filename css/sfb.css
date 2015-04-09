@@ -54,6 +54,60 @@ body {
 
 /* anton.i.kulikov@gmail.com Two-N Inc.*/
 
+.game-menu {
+
+}
+
+.game-menu .opening-screen {
+  position: relative;
+  border-radius: 10px;
+  width: 400px;
+  height: 600px;
+  margin: 0px auto;
+  text-align: center;
+  padding: 40px 60px 0;
+}
+
+.game-menu .opening-screen > button {
+    position: absolute;
+}
+
+#free-for-all-menu {
+  top: 0px;
+  right: 80px;
+
+}
+
+#team-death-match-menu {
+  top: 215px;
+  right: 80px;
+}
+
+#open-about-page {
+  bottom: 0;
+  right: 100px;
+}
+
+.about-page {
+  margin: 100px auto;
+  position: relative;
+  width: 400px;
+  height: 600px;
+}
+
+.about-page > p {
+  position: absolute;
+  text-align: center;
+  top: 100px;
+}
+
+.about-page > button {
+  position: absolute;
+  bottom: 300px;
+  left: 190px;
+
+}
+
 .game-form {
   width: 1040px;
   border-radius: 10px;

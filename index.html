@@ -11,7 +11,18 @@
 
 
     <section class="game-menu">
-        <section class="player-number-selection">
+      <section class="opening-screen">
+        <button id="free-for-all-menu"><img src="css/images/freeForAll.png" alt="" /></button>
+        <button id="team-death-match-menu"><img src="css/images/TEAMdEATHMATCH.png" alt="" /></button>
+        <button id="open-about-page"><img src="css/images/about.png" alt="" /></button>
+      </section>
+        <article class="about-page hidden">
+          <p>
+            SFB is the brain child of two sick motherfuckers who ain't got shit else to do but well, shit.
+          </p>
+          <button id="back-to-main-button">Back</button>
+        </article>
+        <section class="player-number-selection hidden">
           <button id="start-game-test">Start Testing Game</button>
 
           <h1>How many players?</h1>
@@ -152,6 +163,46 @@
         READYPLAYERS = [];
 
         /* EVENT LISTENERS */
+
+        /* Multiplayer Menu */
+        var addFreeForAllMenu = function () {
+          var openingScreen = document.getElementsByClassName('opening-screen'),
+              multiplayerScreen = document.getElementsByClassName('player-number-selection');
+
+          openingScreen[0].classList.add('hidden');
+          multiplayerScreen[0].classList.remove('hidden');
+
+        }
+
+        var menuButton = document.getElementById('free-for-all-menu');
+        menuButton.addEventListener('click', addFreeForAllMenu);
+
+        /* About Page */
+        var addAboutPage = function () {
+          var openingScreen = document.getElementsByClassName('opening-screen'),
+              aboutPage = document.getElementsByClassName('about-page');
+
+          openingScreen[0].classList.add('hidden');
+          aboutPage[0].classList.remove('hidden');
+
+        }
+
+        var aboutButton = document.getElementById('open-about-page');
+        aboutButton.addEventListener('click', addAboutPage);
+
+        /* Back to Main Menu */
+        var backToMain = function () {
+          var openingScreen = document.getElementsByClassName('opening-screen'),
+              aboutPage = document.getElementsByClassName('about-page');
+
+          openingScreen[0].classList.remove('hidden');
+          aboutPage[0].classList.add('hidden');
+
+        }
+
+        var backToMainButton = document.getElementById('back-to-main-button');
+        backToMainButton.addEventListener('click', backToMain);
+
 
         /* Get player number*/
         var addPlayers = function (event) {
