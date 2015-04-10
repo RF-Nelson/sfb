@@ -1,5 +1,7 @@
 # SFB #
 
+# Game screen management through JQuery #
+
 ### TO DO ###
 * menu system
 * menu graphics

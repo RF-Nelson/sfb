@@ -131,6 +131,17 @@
       </section>
     </section>
 
+    <section class="closing-screen-free hidden">
+      <ul class="closing-items">
+      </ul>
+    </section>
+
+    <section class="closing-screen-team hidden">
+      <ul class="closing-items">
+        <li id="winning-team"></li>
+      </ul>
+    </section>
+
 
 
     <script src="vendor/jquery-2.1.1.js"></script>
@@ -164,9 +175,6 @@
 
     <script type="application/javascript">
       (function () {
-        // GameStateManager = new SFB.GameStateManager_Singleton();
-        // ID.game_state_title = GameStateManager.add(new TitleMenuState());
-        // ID.game_state_play = GameStateManager.add(new TitleMenuState());
         var canvasEl = document.getElementsByTagName("canvas")[0];
         canvasEl.width = SFB.Game.DIM_X;
         canvasEl.height = SFB.Game.DIM_Y;
@@ -199,7 +207,7 @@
           openingScreen[0].classList.add('hidden');
           multiplayerScreen[0].classList.remove('hidden');
           showTeams = false;
-          gameMode = 'Free';
+          GAMEMODE = 'Free';
         }
 
         var menuButton = document.getElementById('free-for-all-menu');
@@ -213,7 +221,7 @@
           openingScreen[0].classList.add('hidden');
           multiplayerScreen[0].classList.remove('hidden');
           showTeams = true;
-          gameMode = 'Team';
+          GAMEMODE = 'Team';
 
         }
 
