@@ -90,22 +90,75 @@ body {
 
 .about-page {
   margin: 100px auto;
+  background: #08E8DE;
   position: relative;
-  width: 400px;
-  height: 600px;
+  width: 560px;
+  height: 400px;
+  border-radius: 20px;
+  padding: 0 50px 50px 50px;
+}
+
+.about-page > h1 {
+  color: #fff;
+  font-size: 62px;
+  font-family: fantasy;
+  font-weight: bold;
+  margin: 0 155px;
 }
 
 .about-page > p {
-  position: absolute;
   text-align: center;
-  top: 100px;
+  font-size: 24px;
+  padding-top: 55px;
+  font-family: fantasy;
+}
+
+.about-page > a {
+  color: #fff;
+}
+
+.about-page > a:hover {
+  color: #D816C4;
+}
+
+.about-page #bryan {
+  position: absolute;
+  left: 65%;
+  bottom: 110px;
+  font-size: 24px;
+}
+
+.about-page #rich {
+  position: absolute;
+  left: 55%;
+  bottom: 110px;
+  font-size: 24px;
 }
 
 .about-page > button {
   position: absolute;
-  bottom: 300px;
-  left: 190px;
+  bottom: 10px;
+  left: 43%;
+  background: #fff;
+  padding: 10px 20px;
+  color: #D816C4;
+  width: 60px;
+  border-radius: 5px;
+  font-size: 22px;
+  text-align: center;
+}
 
+.about-page > button:hover {
+  position: absolute;
+  bottom: 10px;
+  left: 43%;
+  background: #D816C4;
+  padding: 10px 20px;
+  color: #fff;
+  width: 60px;
+  border-radius: 5px;
+  font-size: 22px;
+  text-align: center;
 }
 
 .game-form {
