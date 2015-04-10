@@ -181,6 +181,12 @@
     <script type="application/javascript">
       (function () {
         var canvasEl = document.getElementsByTagName("canvas")[0];
+
+        setInterval(function () {
+          // STORE ARRAY OF GAMEPADS IN GLOBAL OBJECT
+          window.gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+        }, 20)
+        
         canvasEl.width = SFB.Game.DIM_X;
         canvasEl.height = SFB.Game.DIM_Y;
         var ctx = canvasEl.getContext("2d");
