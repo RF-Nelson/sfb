@@ -284,6 +284,10 @@ body {
   cursor: pointer;
 }
 
+.player-team {
+  cursor: pointer;
+}
+
 .player-forms > article #types {
   float: left;
   border-right: 1px solid #000;
