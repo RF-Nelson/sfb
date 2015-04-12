@@ -147,17 +147,10 @@
         <section class="individual-player-stats">
 
         </section>
-        <button id="new-game-button">New Game</button>
+        <button id="replay-game-button">Replay</button>
+        <button id="new-game-button">Main Menu</button>
+
     </section>
-
-    <section class="closing-screen-team hidden">
-      <h1 class="closing-screen-winner"></h1>
-        <section class="individual-player-stats">
-
-        </section>
-    </section>
-
-
 
     <script src="vendor/jquery-2.1.1.js"></script>
     <script type="application/javascript" src="vendor/keymaster.js"></script>
@@ -220,14 +213,6 @@
 
 
         /* EVENT LISTENERS */
-
-        /* Start New Game After Ending*/
-        var loadNewGame = function () {
-          location.reload();
-        }
-        var newGameButton = document.getElementById('new-game-button');
-        newGameButton.addEventListener('click', loadNewGame);
-
 
         /* Free For All Menu */
         var addFreeForAllMenu = function () {
@@ -448,6 +433,26 @@
 
         var startButton = document.getElementsByName('start-game');
         startButton[0].addEventListener('click', readyGame);
+
+        /* Return To Main Menu After Ending*/
+        var loadMainMenu = function () {
+          location.reload();
+        }
+        var mainMenuReturn = document.getElementById('new-game-button');
+        mainMenuReturn.addEventListener('click', loadMainMenu);
+
+        /* Restart Game After Ending*/
+
+        var restartGame = function () {
+          var body = $("body");
+          $('#gameArea')[0].classList.remove('hidden');
+          $('.closing-screen')[0].classList.add('hidden');
+          readyGame();
+
+        }
+        var replayGameButton = document.getElementById('replay-game-button');
+        replayGameButton.addEventListener('click', restartGame);
+
 
       })();
     </script>

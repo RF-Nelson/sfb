@@ -395,10 +395,10 @@ body {
   margin-bottom: 40px;
 }
 
-.closing-screen > button {
+.closing-screen #replay-game-button {
   position: absolute;
   bottom: 10px;
-  left: 41%;
+  left: 30%;
   background: #fff;
   padding: 5px 10px;
   color: #D816C4;
@@ -408,10 +408,36 @@ body {
   text-align: center;
 }
 
-.closing-screen > button:hover {
+.closing-screen #new-game-button {
   position: absolute;
   bottom: 10px;
-  left: 41%;
+  left: 52%;
+  background: #fff;
+  padding: 5px 10px;
+  color: #D816C4;
+  width: 100px;
+  border-radius: 5px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.closing-screen #replay-game-button:hover {
+  position: absolute;
+  bottom: 10px;
+  left: 30%;
+  background: #D816C4;
+  padding: 5px 10px;
+  color: #fff;
+  width: 100px;
+  border-radius: 5px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.closing-screen #new-game-button:hover {
+  position: absolute;
+  bottom: 10px;
+  left: 52%;
   background: #D816C4;
   padding: 5px 10px;
   color: #fff;
