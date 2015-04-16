@@ -8,6 +8,7 @@
   <body>
     <div id="gameArea">
       <canvas id="sfb-game"></canvas>
+
     </div>
 
 
@@ -17,6 +18,7 @@
           <img src="css/images/SFB.png" alt="" />
 
         </div>
+        <button id="single-player-menu"><img src="css/images/freeForAll.png" alt="" /></button>
         <button id="free-for-all-menu"><img src="css/images/freeForAll.png" alt="" /></button>
         <button id="team-death-match-menu"><img src="css/images/TEAMdEATHMATCH.png" alt="" /></button>
         <button id="open-about-page"><img src="css/images/about.png" alt="" /></button>
@@ -129,13 +131,32 @@
               <button name="ready-up" data-id="4" class="hide-button">Ready Up!</button>
             </article>
           </ul>
-          <article class="controls">
+          <article class="controls group">
             <h1>Controls</h1>
-            <ul>
+            <ul id="controller-controls">
+              <h3>Controller</h3>
               <li>Left Trigger: Fart Pack</li>
               <li>Right Trigger: Jump</li>
               <li>'A' Button: Standard Fart</li>
               <li>'B' Button: Special Fart</li>
+            </ul>
+            <ul id="keyboard-controls-1">
+              <h3>Keyboard-Player 1</h3>
+              <li>'A' Button: Move Left</li>
+              <li>'D' Button: Move Right</li>
+              <li>'W' Button: Jump</li>
+              <li>'S' Button: Fart Pack</li>
+              <li>'Q' Button: Standard Fart</li>
+              <li>'E' Button: Special Fart</li>
+            </ul>
+            <ul id="keyboard-controls-2">
+              <h3>Keyboard-Player 2</h3>
+              <li>Left Arrow: Move Left</li>
+              <li>Right Arrow: Move Right</li>
+              <li>Up Arrow: Jump</li>
+              <li>Down Arrow: Fart Pack</li>
+              <li>'Option' Button: Standard Fart</li>
+              <li>'Shift' Button: Special Fart</li>
             </ul>
           </article>
         <button name="start-game" class="hide-button">Start Game</button>
@@ -145,11 +166,40 @@
     <section class="closing-screen hidden">
       <h1 class="closing-screen-winner"></h1>
         <section class="individual-player-stats">
-
         </section>
         <button id="replay-game-button">Replay</button>
         <button id="new-game-button">Main Menu</button>
+    </section>
 
+    <section class="hidden" id="pause-screen">
+      <article class="controls group">
+        <h1>Controls</h1>
+        <ul id="controller-controls">
+          <h3>Controller</h3>
+          <li>Left Trigger: Fart Pack</li>
+          <li>Right Trigger: Jump</li>
+          <li>'A' Button: Standard Fart</li>
+          <li>'B' Button: Special Fart</li>
+        </ul>
+        <ul id="keyboard-controls-1">
+          <h3>Keyboard-Player 1</h3>
+          <li>'A' Button: Move Left</li>
+          <li>'D' Button: Move Right</li>
+          <li>'W' Button: Jump</li>
+          <li>'S' Button: Fart Pack</li>
+          <li>'Q' Button: Standard Fart</li>
+          <li>'E' Button: Special Fart</li>
+        </ul>
+        <ul id="keyboard-controls-2">
+          <h3>Keyboard-Player 2</h3>
+          <li>Left Arrow: Move Left</li>
+          <li>Right Arrow: Move Right</li>
+          <li>Up Arrow: Jump</li>
+          <li>Down Arrow: Fart Pack</li>
+          <li>'Option' Button: Standard Fart</li>
+          <li>'Shift' Button: Special Fart</li>
+        </ul>
+      </article>
     </section>
 
     <script src="vendor/jquery-2.1.1.js"></script>
@@ -183,6 +233,7 @@
     <script type="application/javascript" src="lib/death.js"></script>
     <script type="application/javascript" src="lib/AIgnome.js"></script>
 
+
     <script type="application/javascript">
       (function () {
         var canvasEl = document.getElementsByTagName("canvas")[0];
@@ -214,6 +265,21 @@
 
 
         /* EVENT LISTENERS */
+
+        /* Single Player Menu */
+        var addFreeForAllMenu = function () {
+          /* Handle team number designation */
+          var openingScreen = document.getElementsByClassName('opening-screen'),
+              multiplayerScreen = document.getElementsByClassName('player-number-selection');
+
+          openingScreen[0].classList.add('hidden');
+          multiplayerScreen[0].classList.remove('hidden');
+          showTeams = false;
+          GAMEMODE = 'Free';
+        }
+
+        var menuButton = document.getElementById('single-player-menu');
+        menuButton.addEventListener('click', addSinglePlayerMenu);
 
         /* Free For All Menu */
         var addFreeForAllMenu = function () {
