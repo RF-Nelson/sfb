@@ -82,20 +82,6 @@ body {
     position: absolute;
 }
 
-.controls {
-  width: 300px;
-  border: 1px solid #000;
-  margin: 0 auto;
-  padding: 20px;
-  border-radius: 5px;
-}
-
-.controls > h1 {
-  font-size: 50px;
-  border-bottom: 1px solid#000;
-  margin-bottom: 30px;
-}
-
 #single-player-menu {
   top: 165px;
   right: 85px;
@@ -255,7 +241,7 @@ body {
 .player-number-selection {
   background: #fff;
   border-radius: 10px;
-  width: 400px;
+  width: 410px;
   margin: 150px auto;
   text-align: center;
   padding: 40px 60px 0;
@@ -411,9 +397,21 @@ body {
 }
 
 .controls {
-  width: 450px;
-  text-align: center;
+}
 
+.controls {
+  width: 490px;
+  text-align: center;
+  border: 1px solid #000;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.controls > h1 {
+  font-size: 50px;
+  border-bottom: 1px solid#000;
+  margin-bottom: 30px;
 }
 
 .controls > ul{
@@ -440,7 +438,7 @@ body {
   margin: 100px auto;
   background: #08E8DE;
   position: relative;
-  width: 560px;
+  width: 590px;
   height: 400px;
   border-radius: 20px;
   padding: 50px;
