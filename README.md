@@ -1,6 +1,7 @@
 # SFB #
 
 ### TO DO ###
+* remove the word "fart" from everything
 * update menu system controls
 * add AI
 * update menu control descriptions (include keyboard, describe farting at angles, etc.)
