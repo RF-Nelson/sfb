@@ -1,7 +1,6 @@
 # SFB #
 
 ### TO DO ###
-* give up
 * update menu system controls
 * add AI
 * update menu control descriptions (include keyboard, describe farting at angles, etc.)
@@ -14,6 +13,7 @@
 
 
 ## DONE ##
+* give up
 * add 2v2 team game mode
 * scaling / gnome size
 * animation engine
