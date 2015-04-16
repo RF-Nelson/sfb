@@ -89,9 +89,6 @@ body {
 }
 
 #single-player-menu:hover {
-  top: 165px;
-  right: 85px;
-
 }
 
 #free-for-all-menu {
@@ -101,9 +98,6 @@ body {
 }
 
 #free-for-all-menu:hover {
-  top: 275px;
-  right: 95px;
-
 }
 
 #team-death-match-menu {
@@ -112,8 +106,6 @@ body {
 }
 
 #team-death-match-menu:hover {
-  bottom: 285px;
-  right: 20px;
 }
 
 #open-about-page {
@@ -122,8 +114,6 @@ body {
 }
 
 #open-about-page:hover {
-  bottom: 80px;
-  right: 150px;
 }
 
 .about-page {
