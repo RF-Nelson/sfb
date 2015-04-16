@@ -1,10 +1,9 @@
 # SFB #
 
 ### TO DO ###
-* remove the word "fart" from everything
+* get motivation to work on this again
 * update menu system controls
-* add AI
-* update menu control descriptions (include keyboard, describe farting at angles, etc.)
+* update menu control descriptions (describe farting at angles, etc.)
 * background graphics
 * level design
 * powerups? (maybe not...)
@@ -15,6 +14,10 @@
 
 ## DONE ##
 * give up
+* remove the word "fart" from everything
+* * great plan considering the domain we bought
+* launch website
+* add AI
 * add 2v2 team game mode
 * scaling / gnome size
 * animation engine
