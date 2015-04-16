@@ -198,6 +198,32 @@ body {
   display: none;
 }
 
+.computer-number-selection {
+  background: #fff;
+  border-radius: 10px;
+  width: 400px;
+  margin: 150px auto;
+  text-align: center;
+  padding: 40px 60px 0;
+
+}
+
+.computer-number-selection > h1 {
+  font-size: 44px;
+  margin-bottom: 20px;
+}
+
+.computer-number-selection > ul > li {
+  border-top: 1px solid #000;
+  cursor: pointer;
+  padding: 20px 10px;
+  font-size: 24px;
+}
+
+.computer-number-selection > ul > li:hover {
+  background: lightgray;
+}
+
 .player-number-selection {
   background: #fff;
   border-radius: 10px;

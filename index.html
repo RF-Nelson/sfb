@@ -18,7 +18,7 @@
           <img src="css/images/SFB.png" alt="" />
 
         </div>
-        <button id="single-player-menu"><img src="css/images/freeForAll.png" alt="" /></button>
+        <button id="single-player-menu"><img src="css/images/singlePlayer.png" alt="" /></button>
         <button id="free-for-all-menu"><img src="css/images/freeForAll.png" alt="" /></button>
         <button id="team-death-match-menu"><img src="css/images/TEAMdEATHMATCH.png" alt="" /></button>
         <button id="open-about-page"><img src="css/images/about.png" alt="" /></button>
@@ -39,6 +39,15 @@
             <li class="player-number" data-id="2">TWO</li>
             <li class="player-number" data-id="3">THREE</li>
             <li class="player-number" data-id="4">FOUR</li>
+          </ul>
+        </section>
+
+        <section class="computer-number-selection hidden">
+          <h1>How many computer players?</h1>
+          <ul>
+            <li class="computer-number" data-id="1">ONE</li>
+            <li class="computer-number" data-id="2">TWO</li>
+            <li class="computer-number" data-id="3">THREE</li>
           </ul>
         </section>
 
@@ -270,12 +279,12 @@
         var addSinglePlayerMenu = function () {
           /* Handle team number designation */
           var openingScreen = document.getElementsByClassName('opening-screen'),
-              multiplayerScreen = document.getElementsByClassName('player-number-selection');
+              computerNumberScreen = document.getElementsByClassName('computer-number-selection');
 
           openingScreen[0].classList.add('hidden');
-          multiplayerScreen[0].classList.remove('hidden');
+          computerNumberScreen[0].classList.remove('hidden');
           showTeams = false;
-          GAMEMODE = 'Free';
+          GAMEMODE = 'Single';
         }
 
         var menuButton = document.getElementById('single-player-menu');
@@ -335,8 +344,34 @@
         var backToMainButton = document.getElementById('back-to-main-button');
         backToMainButton.addEventListener('click', backToMain);
 
+        /* Get Computer Player Number*/
+        var addComputers = function (event) {
+          var target = $(event.currentTarget),
+              menu = document.getElementsByClassName('computer-number-selection'),
+              attrsMenu = document.getElementsByClassName('game-form');
 
-        /* Get player number*/
+              COMPUTERS = target.data('id');
+
+              menu[0].classList.add('hidden');
+              attrsMenu[0].classList.remove('hidden');
+
+            var playerChoices = document.getElementsByClassName('player-1');
+            PLAYERS[1] = { attrs: {} };
+
+            playerChoices[0].classList.add('display-players');
+
+            var displayTeam = document.getElementsByClassName('player-1-teams');
+            displayTeam[0].classList.add('hidden');
+            PLAYERS[1]['attrs']['playerTeam'] = 1;
+
+        };
+
+        var computerNumbers = document.getElementsByClassName('computer-number');
+        for(var i = 0; i < computerNumbers.length; i ++) {
+          computerNumbers[i].addEventListener('click', addComputers);
+        }
+
+        /* Get Player Number*/
         var addPlayers = function (event) {
           var target = $(event.currentTarget),
               players = target.data('id'),
@@ -365,6 +400,16 @@
           playerNumbers[i].addEventListener('click', addPlayers);
         }
 
+        /* Change Computer Player Number */
+        var toggleComputers = function(options) {
+          menu = document.getElementsByClassName('computer-number-selection'),
+          attrsMenu = document.getElementsByClassName('game-form');
+
+          menu[0].classList.remove('hidden');
+          attrsMenu[0].classList.add('hidden');
+
+        };
+
         /* Change Player Number */
         var togglePlayers = function(options) {
           menu = document.getElementsByClassName('player-number-selection'),
@@ -376,7 +421,13 @@
         };
 
         var changePlayerButton = document.getElementsByClassName('toggle-players');
-        changePlayerButton[0].addEventListener('click', togglePlayers);
+        changePlayerButton[0].addEventListener('click', function () {
+          if (GAMEMODE === "Single") {
+            toggleComputers();
+          } else {
+            togglePlayers();
+          }
+        });
 
         /* Get player speed/health setting */
         var addPlayersType = function (event) {
