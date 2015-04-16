@@ -1,36 +1,6 @@
-# SFB #
+# SFB[link] #
+[link]: http://www.superfartbros.com
 
-### TO DO ###
-* get motivation to work on this again
-* update menu system controls
-* update menu control descriptions (describe farting at angles, etc.)
-* background graphics
-* level design
-* powerups? (maybe not...)
-* * "chance" powerups that may not always be beneficial
-* network play
-* additional levels
+SFB is a game similar to Super Smash Bros. for Google's Chrome browser. You control a gnome and your goal is to attack the other gnomes until they run out of health and lives.
 
-
-## DONE ##
-* give up
-* remove the word "fart" from everything
-* * great plan considering the domain we bought
-* launch website
-* add AI
-* add 2v2 team game mode
-* scaling / gnome size
-* animation engine
-* movement
-* collisions
-* beans as ammo for farts
-* controller input
-* Game screen management through JQuery
-* particle effects
-* animations:
-* * fartpack
-* * fartthrower
-* * mine fart
-* * bouncing fart
-* * other powerups
-* * gnomeDeath
+This game was built using JavaScript on layered HTML5 canvases. The menu was created with jQuery. The particle effects were made with the help of fireworks.js. The gnome animations were created in 3DS Max and converted to spritesheets. Up to four USB gamepads can be accessed via Chrome's built-in APIs for 4-way simultaneous multiplayer.
