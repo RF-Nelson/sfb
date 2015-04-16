@@ -1,14 +1,28 @@
 # SFB #
 
-# Game screen management through JQuery #
-
 ### TO DO ###
-* menu system
-* menu graphics
-* powerups
+* give up
+* update menu system controls
+* add AI
+* update menu control descriptions (include keyboard, describe farting at angles, etc.)
 * background graphics
 * level design
+* powerups? (maybe not...)
+* * "chance" powerups that may not always be beneficial
+* network play
+* additional levels
+
+
+## DONE ##
+* add 2v2 team game mode
+* scaling / gnome size
+* animation engine
+* movement
+* collisions
+* beans as ammo for farts
 * controller input
+* Game screen management through JQuery
+* particle effects
 * animations:
 * * fartpack
 * * fartthrower
@@ -16,18 +30,3 @@
 * * bouncing fart
 * * other powerups
 * * gnomeDeath
-
-### SECONDARY TO DO ###
-* "chance" powerups that may not always be beneficial
-* network play
-* additional levels
-* add 2v2 team game mode
-
-
-## DONE ##
-
-* scaling / gnome size
-* animation
-* movement
-* collisions
-* beans as ammo for farts
