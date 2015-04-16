@@ -72,7 +72,7 @@ body {
   position: relative;
   border-radius: 10px;
   width: 400px;
-  height: 600px;
+  height: 800px;
   margin: 0px auto;
   text-align: center;
   padding: 40px 60px 0;
@@ -96,20 +96,48 @@ body {
   margin-bottom: 30px;
 }
 
+#single-player-menu {
+  top: 165px;
+  right: 85px;
+
+}
+
+#single-player-menu:hover {
+  top: 165px;
+  right: 85px;
+
+}
+
 #free-for-all-menu {
-  top: 140px;
-  right: 150px;
+  top: 275px;
+  right: 95px;
+
+}
+
+#free-for-all-menu:hover {
+  top: 275px;
+  right: 95px;
 
 }
 
 #team-death-match-menu {
-  top: 310px;
-  right: 30px;
+  bottom: 285px;
+  right: 20px;
+}
+
+#team-death-match-menu:hover {
+  bottom: 285px;
+  right: 20px;
 }
 
 #open-about-page {
-  bottom: 10px;
-  right: 200px;
+  bottom: 80px;
+  right: 150px;
+}
+
+#open-about-page:hover {
+  bottom: 80px;
+  right: 150px;
 }
 
 .about-page {
