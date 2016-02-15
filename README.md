@@ -1,4 +1,4 @@
-# [SFB] #
+# [SFB] <- Click to play #
 [SFB]: http://www.superfartbros.com
 
 SFB is a game similar to Super Smash Bros. for Google's Chrome browser. You control a gnome and your goal is to attack the other gnomes until they run out of health and lives.
