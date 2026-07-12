@@ -1,0 +1,19 @@
+{
+  "name": "sfb-server",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/index.js --external:ws",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "sfb-shared": "*",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.0",
+    "esbuild": "^0.21.0"
+  }
+}

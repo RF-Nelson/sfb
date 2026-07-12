@@ -1,0 +1,379 @@
+@font-face {
+  font-family: 'Delius Unicase';
+  src: url('/assets/fonts/delius-unicase-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Delius Unicase';
+  src: url('/assets/fonts/delius-unicase-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --ink: #2b1c0e;
+  --paper: rgba(255, 252, 240, 0.94);
+  --accent: #d816c4;
+  --accent2: #08a88a;
+  --focus: #ff9d00;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background: #101014;
+  overflow: hidden;
+  font-family: 'Delius Unicase', 'Comic Sans MS', 'Chalkboard SE', cursive;
+  color: var(--ink);
+}
+
+#stage {
+  position: absolute;
+  /* sized by JS to preserve 16:9, centered */
+}
+
+#game {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+#ui {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+#ui.transparent {
+  pointer-events: none;
+  background: none;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2em;
+  background: url('/assets/sprites/cloudold.gif') center/cover;
+  /* TV-safe padding for console browsers */
+  padding: 4vh 5vw;
+  font-size: clamp(12px, 2.1vh, 22px);
+}
+
+.screen.dim {
+  background: rgba(8, 6, 24, 0.72);
+}
+
+.panel {
+  background: var(--paper);
+  border: 4px solid var(--ink);
+  border-radius: 22px;
+  padding: 1.4em 2em;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  max-height: 88%;
+  overflow-y: auto;
+  min-width: 34em;
+}
+
+.logo {
+  width: clamp(180px, 30vh, 340px);
+  image-rendering: auto;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.35));
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 0.4em;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.2em;
+  margin: 0.6em 0 0.3em;
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  min-width: 14em;
+}
+
+button,
+.btn {
+  font: inherit;
+  font-size: 1.15em;
+  padding: 0.55em 1.4em;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  background: #ffe95e;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.06s ease;
+}
+
+button.secondary {
+  background: #d7ecff;
+}
+
+button.danger {
+  background: #ffb3a7;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+[data-f]:focus,
+[data-f].focused {
+  outline: 6px solid var(--focus);
+  outline-offset: 2px;
+  transform: scale(1.03);
+  z-index: 2;
+}
+
+input[type='text'] {
+  font: inherit;
+  font-size: 1.2em;
+  padding: 0.45em 0.8em;
+  border: 4px solid var(--ink);
+  border-radius: 12px;
+  width: 9em;
+  text-transform: uppercase;
+  text-align: center;
+  background: #fff;
+}
+
+.cycler {
+  display: grid;
+  grid-template-columns: 1.4em 1fr 1.4em;
+  align-items: center;
+  gap: 0.3em;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  padding: 0.3em 0.5em;
+  font-size: 1em;
+  min-width: 10.5em;
+  cursor: pointer;
+  user-select: none;
+}
+
+.cycler .arrow {
+  opacity: 0.55;
+  text-align: center;
+}
+
+.cycler .val {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.row {
+  display: flex;
+  gap: 0.8em;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.setup-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+  margin: 0.6em 0;
+}
+
+.player-row {
+  display: grid;
+  grid-template-columns: 7.5em repeat(4, auto);
+  gap: 0.6em;
+  align-items: center;
+  padding: 0.4em 0.7em;
+  border-radius: 14px;
+  border: 3px dashed transparent;
+}
+
+.player-row.inactive {
+  opacity: 0.5;
+}
+
+.chip {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  border: 3px solid var(--ink);
+  margin-right: 0.4em;
+  vertical-align: -0.12em;
+}
+
+.chip.blue { background: #3d7bff; }
+.chip.orange { background: #ff9d2e; }
+.chip.purple { background: #a24ee0; }
+.chip.green { background: #47c447; }
+
+.level-preview {
+  border: 4px solid var(--ink);
+  border-radius: 14px;
+  width: 320px;
+  height: 180px;
+  background: #cde;
+}
+
+.hint {
+  opacity: 0.75;
+  font-size: 0.85em;
+  text-align: center;
+}
+
+.error {
+  color: #b3122e;
+  font-weight: 700;
+  min-height: 1.3em;
+  text-align: center;
+}
+
+.code-badge {
+  font-size: 2.6em;
+  letter-spacing: 0.35em;
+  background: #fff;
+  border: 4px dashed var(--ink);
+  padding: 0.2em 0.6em 0.2em 0.9em;
+  border-radius: 16px;
+}
+
+.lobby-players {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin: 0.8em 0;
+  min-width: 30em;
+}
+
+.lobby-player {
+  display: flex;
+  gap: 0.9em;
+  align-items: center;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  padding: 0.45em 0.9em;
+}
+
+.lobby-player .name {
+  flex: 1;
+  font-weight: 700;
+}
+
+.ready-dot {
+  font-weight: 700;
+  color: #0a7d40;
+}
+
+.stats-grid {
+  display: flex;
+  gap: 0.9em;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0.7em 0;
+}
+
+.stat-card {
+  background: #fff;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  padding: 0.7em 1em;
+  min-width: 13em;
+  font-size: 0.92em;
+}
+
+.stat-card.winner {
+  background: #fff3b0;
+  border-color: #c9a227;
+  box-shadow: 0 0 30px rgba(255, 214, 90, 0.8);
+}
+
+.stat-card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stat-card td {
+  padding: 0.1em 0;
+}
+
+.stat-card td:last-child {
+  text-align: right;
+  font-weight: 700;
+}
+
+.winner-banner {
+  font-size: 2.6em;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.controls-table {
+  border-collapse: collapse;
+  margin: 0.4em auto;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.controls-table th,
+.controls-table td {
+  border: 1px solid rgba(43, 28, 14, 0.25);
+  padding: 0.3em 0.8em;
+  font-size: 0.85em;
+}
+
+.topbar {
+  position: absolute;
+  top: 2.5vh;
+  right: 3vw;
+  display: flex;
+  gap: 0.6em;
+}
+
+.topbar button {
+  font-size: 0.9em;
+  padding: 0.35em 0.8em;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#toast {
+  position: absolute;
+  bottom: 6vh;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 16, 10, 0.92);
+  color: #ffe95e;
+  border-radius: 14px;
+  padding: 0.7em 1.6em;
+  font-size: 1.1em;
+  z-index: 40;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}

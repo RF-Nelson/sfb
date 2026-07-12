@@ -1,0 +1,16 @@
+{
+  "name": "sfb-client",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "sfb-shared": "*"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}

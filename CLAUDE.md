@@ -1,0 +1,100 @@
+# Super Fart Bros. — project guide for Claude
+
+Smash-Bros-style 4-player browser party game with farting gnomes. This repo contains
+**two games**: the untouched 2014 original (root `index.html` + `lib/` + `vendor/`, served
+at `/classic`) and the **2026 TypeScript rewrite** (`packages/`), which is the live game at
+https://superfartbros.fly.dev. Feature parity with 2014 is a hard requirement — the
+contract is `REFACTOR_PLAN.md` §2. Read that before touching gameplay.
+
+## Iron rules
+
+- **All attacks fire BACKWARDS** (out of the butt) and recoil pushes the gnome forward.
+  This is the signature mechanic. Any change that makes farts fire forward is a bug.
+- **The sim (`packages/shared`) must stay deterministic**: fixed 20 ms tick, no
+  `Math.random`/`Date.now` inside sim code — all randomness through the seeded `Prng`.
+  The same sim runs locally (client) and authoritatively (server); they must not diverge.
+- **Physics constants live in `packages/shared/src/constants.ts`** and mirror the 2014
+  code; don't "clean them up" (see REFACTOR_PLAN §2.5). Changes to game feel go through
+  the decision log below.
+- **Levels**: edge floor rects must overhang the wrap seam by ~100 px (like the original
+  garden's floor extending to x=2020) or gnomes die crossing x≈1920. Every level needs
+  `aiJumpZones`, and `aiAvoidZones` beside any pit wider than ~400 px (unjumpable).
+- **Never touch the 2014 files** (`lib/`, `vendor/`, root `index.html`, `css/`) except for
+  serving/packaging (`tools/build-classic.mjs` handles its Linux case-sensitivity fixes).
+- **fly.io must run exactly ONE machine** — rooms live in process memory. `fly deploy`
+  loves to create a second "for high availability"; if it does, `fly scale count 1 --yes`.
+- **Don't rename sprite assets**: `tools/sync-assets.mjs` lowercases them into the client
+  (8 originals have case-mismatched references; macOS hides this, Linux 404s).
+- Keep the client build target **ES2017** (PS4 WebKit floor) and every menu fully
+  **gamepad-navigable** (`data-f` focus system) — console browsers have no mouse.
+
+## Layout & commands
+
+```
+packages/shared   sim, levels, AI, protocol (pure TS, no DOM/Node deps)
+packages/client   Vite app: renderer, particles, procedural audio, menus, net client
+packages/server   Node + ws: static hosting, rooms, authoritative 50 Hz sim
+tools/            sync-assets.mjs, build-classic.mjs
+```
+
+- `npm run dev` — Vite client only (local play; `/ws` proxies to :8080)
+- `npm run dev:server` — full build + real server on :8080 (needed for online play)
+- `npm test` — sim parity suite (vitest, `packages/shared/test`)
+- `npm run build` — client + server + classic-dist
+- `fly deploy --remote-only --yes` — deploy (app `superfartbros`, region ewr, 1 machine)
+
+Netcode: server steps 50 Hz, snapshots every 2nd tick, clients render ~110 ms behind with
+interpolation; inputs are level-triggered bitmasks (`shared/src/input.ts`). No client
+prediction yet — add only if self-movement feels floaty at real-world RTT.
+
+## Decision log
+
+**2026-07-12 — Rewrite shipped** (analysis → plan → implementation → fly.io deploy in one day)
+
+- Stack: vanilla TS + Canvas 2D monorepo, no game framework, Node+`ws` server,
+  authoritative-server netcode with snapshot interpolation. Rationale in REFACTOR_PLAN §4.
+- Kept from 2014: all physics constants, backwards-firing attacks, mines hurting their
+  owner (and teammates), bean pacing/costs, 3-lives/100 HP, level-1 geometry, crude AI
+  personality, horizontal wrap, ±50 px landing slop, invisible-baked level-1 art.
+- Deliberate deviations from 2014 (approved defaults): specials require the full 5 beans
+  (was: fire at ≥1, meter went negative); Fast-gnome ground speed is a clean ±20 cap
+  (was: >20 snapped to 10, causing a sawtooth); **respawns land above a random platform**
+  (was: anywhere including over the pit — instant re-death chains on the new wide-pit
+  levels); flame no longer extinguishes early via the (buggy) literal "s"-key check;
+  pause/replay loop-stacking bugs not ported. FFA/Team crash on fresh load
+  (`COMPUTERS` undefined) fixed by design.
+- New content: Log Heaven (skylogs) and The Compost Cave (cave) levels, procedural
+  painted backgrounds; menus with gamepad focus nav; expanded post-game stats
+  (KOs/deaths/self-KOs/damage/beans/specials/accuracy/favorite victim) + podium
+  celebration with confetti; online rooms with 4-letter codes + optional server-side
+  bots; procedural WebAudio SFX (2014 had zero audio); particle FX replace fireworks.js,
+  the Dropbox-hosted flame frames, and `explosion.png`.
+- Fixed during verification: world-wrap seam deaths on the new levels (floors now
+  overhang the seam), AI lemming-into-600px-pit (aiAvoidZones), Fly HA second machine
+  (breaks in-memory rooms — scaled to 1).
+- Deployed: app `superfartbros`, region `ewr`, shared-cpu-1x/512 MB, force_https,
+  `min_machines_running=1`, health check `/healthz`. superfartbros.com DNS **not yet
+  pointed** at fly (open item).
+- Unity/Steam evaluated (REFACTOR_PLAN §8): decision = web first; Steam later via
+  Electron/Tauri wrapper + Remote Play Together (~+2–4 wk); Unity only if Steam shows
+  traction. If Unity ever happens: use the newest LTS ≥6 months old (Unity 6.3 LTS as of
+  mid-2026; 6.0 LTS support ends Oct 2026). Commercial blockers recorded in §8.4
+  (Branston bean-can trademark, GPL Tremulous flame frames, name parodies Nintendo's
+  mark, co-creator ownership with Bryan Millstein).
+
+## Workflow
+
+**Every decision or notable change gets recorded in this file's decision log, then
+committed and pushed to GitHub (origin/master)** — Rich's standing instruction
+(2026-07-12). Run `npm test` before committing sim changes; drive the real game
+(`npm run dev:server` + browser) before committing gameplay/rendering changes.
+
+## Open items
+
+- Point superfartbros.com DNS at the fly app (`fly certs add superfartbros.com` + DNS).
+- Mobile/touch support: feasible; needs a touch-input module (virtual stick + buttons),
+  landscape lock, iOS viewport/audio hardening. One player per device, join online rooms.
+- Console pass: verify on real Xbox Edge (menus are already gamepad-first, ES2017 build).
+- Client-side prediction if online self-movement feels laggy at >100 ms RTT.
+- Late-join/spectate for online rooms; reconnect grace (currently a drop = idle gnome
+  in-match, slot freed in lobby).
