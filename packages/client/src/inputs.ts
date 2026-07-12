@@ -1,6 +1,6 @@
 import { BTN_FART, BTN_JUMP, BTN_LEFT, BTN_PACK, BTN_RIGHT, BTN_SPECIAL } from 'sfb-shared';
 
-export type Source = 'kb1' | 'kb2' | 'pad0' | 'pad1' | 'pad2' | 'pad3';
+export type Source = 'kb1' | 'kb2' | 'touch' | 'pad0' | 'pad1' | 'pad2' | 'pad3';
 
 export interface MenuNav {
   up?: boolean;
@@ -33,10 +33,20 @@ const KB2: Record<string, number> = {
   Period: BTN_SPECIAL,
 };
 
+export function hasTouch(): boolean {
+  return (
+    (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) ||
+    'ontouchstart' in window ||
+    navigator.maxTouchPoints > 0
+  );
+}
+
 export class Inputs {
   private kb1Bits = 0;
   private kb2Bits = 0;
   private down = new Set<string>();
+  /** written by TouchControls */
+  touchBits = 0;
   pauseRequested = false;
 
   // menu navigation edge-events (keyboard + all pads)
@@ -83,6 +93,7 @@ export class Inputs {
   bitsFor(source: Source): number {
     if (source === 'kb1') return this.kb1Bits;
     if (source === 'kb2') return this.kb2Bits;
+    if (source === 'touch') return this.touchBits;
     const idx = Number(source.slice(3));
     const p = this.pads()[idx];
     if (!p) return 0;

@@ -248,15 +248,6 @@ input[type='text'] {
   text-align: center;
 }
 
-.code-badge {
-  font-size: 2.6em;
-  letter-spacing: 0.35em;
-  background: #fff;
-  border: 4px dashed var(--ink);
-  padding: 0.2em 0.6em 0.2em 0.9em;
-  border-radius: 16px;
-}
-
 .lobby-players {
   display: flex;
   flex-direction: column;
@@ -361,6 +352,108 @@ input[type='text'] {
 
 .hidden {
   display: none !important;
+}
+
+.room-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  margin-bottom: 0.35em;
+  flex-wrap: wrap;
+}
+
+.room-head h1 {
+  margin: 0;
+}
+
+.code-badge {
+  font-size: 1.9em;
+  letter-spacing: 0.3em;
+  background: #fff;
+  border: 4px dashed var(--ink);
+  padding: 0.08em 0.25em 0.08em 0.5em;
+  border-radius: 14px;
+  line-height: 1.2;
+}
+
+/* ---- touch controls ---- */
+#stage,
+#game {
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#touch-controls {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.tbtn {
+  position: absolute;
+  pointer-events: auto;
+  width: 9.5%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 252, 240, 0.28);
+  border: 3px solid rgba(30, 20, 10, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(16px, 4.5vh, 40px);
+  color: rgba(30, 20, 10, 0.75);
+  touch-action: none;
+}
+
+.tbtn small {
+  font-size: 0.32em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.tbtn.held {
+  background: rgba(255, 233, 94, 0.55);
+  transform: scale(1.06);
+}
+
+.tbtn[data-tb='left'] { left: 2.5%; bottom: 7%; }
+.tbtn[data-tb='right'] { left: 13.5%; bottom: 7%; }
+.tbtn[data-tb='jump'] { right: 13.5%; bottom: 24%; }
+.tbtn[data-tb='pack'] { right: 2.5%; bottom: 24%; }
+.tbtn[data-tb='special'] { right: 13.5%; bottom: 4%; }
+.tbtn[data-tb='fart'] { right: 2.5%; bottom: 4%; }
+.tbtn.big { width: 10.5%; }
+.tbtn.small {
+  width: 4.5%;
+  top: 2.5%;
+  right: 2%;
+  bottom: auto;
+  font-size: clamp(12px, 2.6vh, 24px);
+}
+
+#rotate-hint {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(10, 8, 24, 0.96);
+  color: #ffe95e;
+  align-items: center;
+  justify-content: center;
+  font-size: 7vw;
+  font-family: 'Delius Unicase', 'Comic Sans MS', cursive;
+  text-align: center;
+}
+
+@media (orientation: portrait) and (pointer: coarse) {
+  #rotate-hint {
+    display: flex;
+  }
 }
 
 #toast {

@@ -85,7 +85,12 @@ export class NetClient {
   }
 
   close(): void {
-    this.ws?.close();
+    if (this.ws) {
+      // intentional close: don't fire the disconnect handler
+      this.ws.onclose = null;
+      this.ws.onmessage = null;
+      this.ws.close();
+    }
     this.ws = null;
   }
 

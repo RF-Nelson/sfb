@@ -82,6 +82,28 @@ prediction yet — add only if self-movement feels floaty at real-world RTT.
   (Branston bean-can trademark, GPL Tremulous flame frames, name parodies Nintendo's
   mark, co-creator ownership with Bryan Millstein).
 
+**2026-07-12 — Mobile controls, lobby fix, custom domain**
+
+- Lobby header no longer overlaps (room code moved out of the `<h1>` into a
+  `.room-head` flex row; duplicate `.code-badge` CSS removed).
+- **Touch controls added** (`client/src/touch.ts`): multi-touch on-screen buttons
+  (◀ ▶ / JUMP / FLY / SPEC / FART + pause), pointer-per-button hit-testing so thumbs can
+  slide between buttons; `touch` is a selectable input source everywhere (local setup,
+  online lobby) and the default on coarse-pointer devices; portrait orientation shows a
+  rotate hint; viewport locked (`user-scalable=no`, `touch-action:none`).
+- Bug fix: `NetClient.close()` now suppresses its own onClose callback — leaving a lobby
+  then immediately starting a local game no longer kicks you back to the title screen.
+- **superfartbros.com now points at the fly app** (Namecheap API via the
+  fly-namecheap-site skill): switched the domain from Namecheap *hosting* nameservers to
+  BasicDNS, wrote A/AAAA for apex+www → fly, added fly certs for both, and the Node
+  server 301-redirects www→apex. **The domain had live email records** (MX →
+  jellyfish.systems, SPF TXT, mail A) — these were carried over verbatim so mail keeps
+  working; they're pinned in the scratch copy of the DNS script and listed in the DNS
+  zone. If Rich ever cancels the old Namecheap hosting package, that mail service dies
+  with it (the MX targets are the hosting package's servers).
+- Namecheap API creds live in `~/Documents/namecheap-test/.env` (user `rfn`); this
+  machine's IP is whitelisted for the Namecheap API.
+
 ## Workflow
 
 **Every decision or notable change gets recorded in this file's decision log, then
@@ -91,10 +113,9 @@ committed and pushed to GitHub (origin/master)** — Rich's standing instruction
 
 ## Open items
 
-- Point superfartbros.com DNS at the fly app (`fly certs add superfartbros.com` + DNS).
-- Mobile/touch support: feasible; needs a touch-input module (virtual stick + buttons),
-  landscape lock, iOS viewport/audio hardening. One player per device, join online rooms.
 - Console pass: verify on real Xbox Edge (menus are already gamepad-first, ES2017 build).
+- Real-device mobile pass (iPhone/Android Safari/Chrome): touch controls shipped, but
+  sizes/feel need a hands-on check.
 - Client-side prediction if online self-movement feels laggy at >100 ms RTT.
 - Late-join/spectate for online rooms; reconnect grace (currently a drop = idle gnome
   in-match, slot freed in lobby).

@@ -14,7 +14,8 @@ import {
 import { Assets } from './assets';
 import { Sfx } from './audio';
 import { GameSession, SlotSources } from './game';
-import { Inputs, Source } from './inputs';
+import { Inputs, Source, hasTouch } from './inputs';
+import { TouchControls } from './touch';
 import { NetClient } from './net';
 import { Particles } from './particles';
 import { Renderer } from './renderer';
@@ -38,6 +39,7 @@ const WHO_LABEL: Record<string, string> = {
   ai: 'Gnomebot (AI)',
   kb1: 'Keyboard 1 (WASD)',
   kb2: 'Keyboard 2 (Arrows)',
+  touch: 'Touch Screen',
   pad0: 'Gamepad 1',
   pad1: 'Gamepad 2',
   pad2: 'Gamepad 3',
@@ -56,13 +58,14 @@ class App {
   renderer = new Renderer(this.ctx, this.assets, this.particles);
   focus = new FocusNav();
   pauseFocus = new FocusNav();
+  touch!: TouchControls;
 
   screen: Screen = 'title';
   session: GameSession | null = null;
   net: NetClient | null = null;
   lobby: LobbyView | null = null;
   mySlot = -1;
-  myOnlineSource: Source = 'kb1';
+  myOnlineSource: Source = hasTouch() ? 'touch' : 'kb1';
   myName = localStorage.getItem('sfb-name') ?? '';
   postResult: MatchResult | null = null;
   postOnline = false;
@@ -84,8 +87,8 @@ class App {
       }
     }
     return [
-      { who: 'kb1', build: 'normal', special: 'bounce', team: 1 },
-      { who: 'kb2', build: 'normal', special: 'mine', team: 2 },
+      { who: hasTouch() ? 'touch' : 'kb1', build: 'normal', special: 'bounce', team: 1 },
+      { who: hasTouch() ? 'ai' : 'kb2', build: 'normal', special: 'mine', team: 2 },
       { who: 'off', build: 'normal', special: 'flame', team: 1 },
       { who: 'off', build: 'normal', special: 'bounce', team: 2 },
     ];
@@ -108,6 +111,7 @@ class App {
     document.body.addEventListener('pointerdown', () => this.sfx.unlock(), { once: true });
     document.body.addEventListener('keydown', () => this.sfx.unlock(), { once: true });
     this.buildPauseOverlay();
+    this.touch = new TouchControls(document.getElementById('stage')!, this.inputs);
     this.showTitle();
     requestAnimationFrame(() => this.loop());
   }
@@ -182,6 +186,7 @@ class App {
   private endSession(): void {
     this.session = null;
     this.renderer.podium = null;
+    this.touch?.show(false, false);
   }
 
   private leaveOnline(): void {
@@ -348,7 +353,17 @@ class App {
   private renderSlotRows(): void {
     const wrap = document.getElementById('slot-rows')!;
     wrap.innerHTML = '';
-    const whoOptions: Participant[] = ['off', 'ai', 'kb1', 'kb2', 'pad0', 'pad1', 'pad2', 'pad3'];
+    const whoOptions: Participant[] = [
+      'off',
+      'ai',
+      'kb1',
+      'kb2',
+      ...(hasTouch() ? (['touch'] as Participant[]) : []),
+      'pad0',
+      'pad1',
+      'pad2',
+      'pad3',
+    ];
     this.slots.forEach((s, i) => {
       const row = el(
         `<div class="player-row ${s.who === 'off' ? 'inactive' : ''}">
@@ -432,6 +447,7 @@ class App {
 
   private startSession(config: MatchConfig, sources: SlotSources, online: NetClient | null): void {
     this.setScreen('game', null, true);
+    this.touch.show(sources.some((s) => s === 'touch'), !online);
     this.session = new GameSession(this.inputs, this.sfx, this.particles, this.renderer, {
       config,
       sources,
@@ -550,7 +566,7 @@ class App {
       <div class="screen">
         ${this.topbar()}
         <div class="panel">
-          <h1>Room <span class="code-badge">${lobby.code}</span></h1>
+          <div class="room-head"><h1>Room</h1><span class="code-badge">${lobby.code}</span></div>
           <p class="hint">Friends join at <b>${location.host}</b> → Online → this code · <span id="rtt-badge"></span></p>
           <div class="row" id="cfg-row"></div>
           <div class="lobby-players" id="lobby-players"></div>
@@ -623,10 +639,16 @@ class App {
         );
       }
       const padIds = this.inputs.connectedPads();
+      const sourceChoices: Source[] = [
+        ...(hasTouch() ? (['touch'] as Source[]) : []),
+        'kb1',
+        'kb2',
+        ...padIds.map((i) => `pad${i}` as Source),
+      ];
       myRow.appendChild(
         makeCycler<Source>({
-          values: ['kb1', 'kb2', ...padIds.map((i) => `pad${i}` as Source)],
-          value: this.myOnlineSource,
+          values: sourceChoices,
+          value: sourceChoices.includes(this.myOnlineSource) ? this.myOnlineSource : sourceChoices[0],
           label: (s) => `Controls: ${WHO_LABEL[s]}`,
           onChange: (s) => (this.myOnlineSource = s),
         })

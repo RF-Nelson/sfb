@@ -40,6 +40,13 @@ export function handleStatic(
   classicDir: string
 ): void {
   const url = (req.url ?? '/').split('?')[0];
+  // www is not canonical: 301 to the apex domain (certs exist for both)
+  const host = req.headers.host ?? '';
+  if (host.toLowerCase().startsWith('www.')) {
+    res.writeHead(301, { location: `https://${host.slice(4)}${req.url ?? '/'}` });
+    res.end();
+    return;
+  }
   if (url === '/healthz') {
     res.writeHead(200, { 'content-type': 'text/plain' });
     res.end('ok');
