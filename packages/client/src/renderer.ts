@@ -69,9 +69,11 @@ export class Renderer {
     return a;
   }
 
-  private gnomeAnimKey(g: GnomeState): string {
+  private gnomeAnimKey(g: GnomeState, flaming: boolean): string {
     const dir = g.facing === 'L' ? 'L' : 'R';
-    if (g.cooldown > 0) return `${g.color}-fart-${dir}`;
+    // while the flame burns, stay bent over — the non-looping fart anim clamps on
+    // its final (bent) frame for as long as this key is held
+    if (flaming || g.cooldown > 0) return `${g.color}-fart-${dir}`;
     if (!g.onGround) {
       if (g.packTicks > 0) return `${g.color}-fartpack-${dir}`;
       return g.vy < 0 ? `${g.color}-jumpup-${dir}` : `${g.color}-jumpdown-${dir}`;
@@ -126,9 +128,10 @@ export class Renderer {
     }
 
     // gnomes
+    const flamingSlots = new Set(snap.farts.filter((f) => f.kind === 'flame').map((f) => f.owner));
     for (const g of snap.gnomes) {
       if (g.dead) continue;
-      const key = this.gnomeAnimKey(g);
+      const key = this.gnomeAnimKey(g, flamingSlots.has(g.slot));
       const a = this.anim(this.gnomeAnims, g.slot, key, dt);
       const dy = key.includes('jumpdown') ? -136 : -130;
       this.assets.drawFrame(ctx, key, a.t, g.x, g.y + dy);

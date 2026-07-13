@@ -166,6 +166,25 @@ prediction yet — add only if self-movement feels floaty at real-world RTT.
 - Title-screen hints wear dark `.hint-chip` pills (black-on-flowers was unreadable);
   PWA hint additionally requires `(hover: none)` so it can never show on desktop.
 
+**2026-07-12 — Flame buff, gamepad detection, menu fit, link previews**
+
+- **Flame balance change** (deliberate deviation from 2014): +34% damage
+  (`FLAME_STR` 0.2 → 0.268) and +30% sweep (`FLAME_DRIFT` 4 → 5.2, ≈390px); the visual
+  cone reach scaled to match (~195px). The gnome now **stays bent over for the whole
+  1.5s burn** (renderer holds the fart pose while an owned flame entity is alive,
+  instead of keying off the 360ms cooldown).
+- **Gamepad detection**: setup/lobby only list pads that `navigator.getGamepads()`
+  actually reports; browsers reveal a pad only after a button press, so the UI coaches
+  that ("plug in and press any button"), refreshes live on `gamepadconnected`/
+  `disconnected` (with toasts), flags stale saved selections "⚠ not detected", blocks
+  Start on missing pads, and auto-pauses a local match if an in-use pad drops.
+- Local-setup menu refit so nothing clips at 720p-class windows: level preview moved
+  beside the mode/level cyclers and em-sized, tighter paddings, panel max-height 92%.
+  (Fixed the Start/Back clipping Rich reported.)
+- **OG/Twitter meta tags + `/og.png`** (1200×630, composed from game art at build-…
+  actually committed as a static asset in `client/public/`). Regenerate by redrawing on
+  canvas from sprites if the branding changes.
+
 ## Workflow
 
 **Every decision or notable change gets recorded in this file's decision log, then

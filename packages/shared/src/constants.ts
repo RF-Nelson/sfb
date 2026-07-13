@@ -64,8 +64,10 @@ export const MINE_STICK_OFFSET = 11; // y = platformTop - 1 - radius(10)
 export const BOUNCE_GROUND_OFFSET = 30; // y = platformTop - 20 - radius(10)
 
 export const FLAME_TTL_TICKS = 75; // 1.5 s
-export const FLAME_STR = 0.2; // per contact tick, scaled by remaining fraction
-export const FLAME_DRIFT = 4; // hitbox drifts backwards 4 px/tick
+// Balance change (2026-07-12, Rich): flame does +34% damage and sweeps +30% further
+// than 2014 (was str 0.2, drift 4).
+export const FLAME_STR = 0.268; // per contact tick, scaled by remaining fraction
+export const FLAME_DRIFT = 5.2; // hitbox drifts backwards px/tick (390px over the burn)
 export const FLAME_SPAWN_AHEAD = 80; // original: facing Left → x+80, else x-10
 export const FLAME_SPAWN_BEHIND = -10;
 export const FLAME_HB_W = 50;

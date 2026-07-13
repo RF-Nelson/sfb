@@ -105,11 +105,11 @@ export class Particles {
       const along = Math.random(); // 0 at nozzle → 1 at cone tip
       this.spawn(
         'fire',
-        x + dir * along * 26,
-        y + (Math.random() - 0.5) * (14 + along * 30), // cone widens with distance
-        dir * (380 + Math.random() * 320),
+        x + dir * along * 34,
+        y + (Math.random() - 0.5) * (14 + along * 34), // cone widens with distance
+        dir * (440 + Math.random() * 370),
         (Math.random() - 0.5) * 80 - 30,
-        0.1 + Math.random() * 0.2, // short life = short range
+        0.115 + Math.random() * 0.23, // short life = short range (~195px, +30%)
         7 + Math.random() * 13 + along * 6
       );
     }

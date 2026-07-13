@@ -143,6 +143,8 @@ class App {
     window.addEventListener('resize', () => this.fit());
     window.visualViewport?.addEventListener('resize', () => this.fit());
     window.visualViewport?.addEventListener('scroll', () => this.fit());
+    window.addEventListener('gamepadconnected', (e) => this.onPadsChanged(e as GamepadEvent, true));
+    window.addEventListener('gamepaddisconnected', (e) => this.onPadsChanged(e as GamepadEvent, false));
     this.ui.innerHTML = `<div class="screen"><div class="panel"><h1>Loading…</h1><p id="load-pct" style="text-align:center">0%</p></div></div>`;
     await this.assets.load((done, total) => {
       const p = document.getElementById('load-pct');
@@ -231,6 +233,24 @@ class App {
       (e.currentTarget as HTMLElement).textContent = muted ? '🔇 Muted' : '🔊 Sound';
     });
     document.getElementById('fs-btn')?.addEventListener('click', () => goFullscreen());
+  }
+
+  private onPadsChanged(e: GamepadEvent, connected: boolean): void {
+    const idx = e.gamepad?.index ?? -1;
+    if (idx >= 0) toast(`🎮 Gamepad ${idx + 1} ${connected ? 'connected' : 'disconnected'}`);
+    // refresh any screen that lists gamepads
+    if (this.screen === 'local') {
+      this.renderSlotRows();
+      this.focus.refresh();
+    } else if (this.screen === 'lobby') {
+      this.showLobby();
+    } else if (this.screen === 'game' && this.session && !connected && idx >= 0) {
+      // console courtesy: losing an in-use pad pauses a local match
+      const inUse = this.session.opts.sources.includes(`pad${idx}` as Source);
+      if (inUse && !this.session.opts.online && !this.session.paused && !this.session.ended) {
+        this.session.togglePause();
+      }
+    }
   }
 
   private endSession(): void {
@@ -326,12 +346,17 @@ class App {
         ${this.topbar()}
         <div class="panel" id="setup-panel">
           <h1>Local Game</h1>
-          <div class="row" id="mode-row"><span>Mode:</span></div>
-          <div class="row" id="level-row" style="margin-top:.5em"><span>Level:</span></div>
-          <div class="row"><canvas class="level-preview" id="level-thumb" width="320" height="180"></canvas></div>
+          <div class="row setup-top">
+            <div class="setup-col">
+              <div class="row" id="mode-row"><span>Mode:</span></div>
+              <div class="row" id="level-row"><span>Level:</span></div>
+              <p class="hint" id="pad-hint"></p>
+            </div>
+            <canvas class="level-preview" id="level-thumb" width="320" height="180"></canvas>
+          </div>
           <div class="setup-grid" id="slot-rows"></div>
           <p class="error" id="setup-err"></p>
-          <div class="row">
+          <div class="row action-row">
             <button data-f id="btn-start" data-f-default>Start Game</button>
             <button data-f data-back id="btn-back" class="secondary">Back</button>
           </div>
@@ -410,18 +435,29 @@ class App {
   private renderSlotRows(): void {
     const wrap = document.getElementById('slot-rows')!;
     wrap.innerHTML = '';
-    const whoOptions: Participant[] = [
-      'off',
-      'ai',
-      'kb1',
-      'kb2',
-      ...(hasTouch() ? (['touch'] as Participant[]) : []),
-      'pad0',
-      'pad1',
-      'pad2',
-      'pad3',
-    ];
+    const pads = this.inputs.connectedPads();
+    const padHint = document.getElementById('pad-hint');
+    if (padHint) {
+      padHint.textContent =
+        pads.length === 0
+          ? '🎮 No gamepads detected — plug one in and press any button on it'
+          : `🎮 ${pads.length} gamepad${pads.length === 1 ? '' : 's'} detected`;
+    }
+    const whoLabel = (w: Participant): string =>
+      w.startsWith('pad') && !pads.includes(Number(w.slice(3)))
+        ? `${WHO_LABEL[w]} ⚠ not detected`
+        : WHO_LABEL[w];
     this.slots.forEach((s, i) => {
+      // only offer connected pads, but keep a stale saved selection visible (flagged)
+      const whoOptions: Participant[] = [
+        'off',
+        'ai',
+        'kb1',
+        'kb2',
+        ...(hasTouch() ? (['touch'] as Participant[]) : []),
+        ...pads.map((p) => `pad${p}` as Participant),
+        ...(s.who.startsWith('pad') && !pads.includes(Number(s.who.slice(3))) ? [s.who] : []),
+      ];
       const row = el(
         `<div class="player-row ${s.who === 'off' ? 'inactive' : ''}">
            <span><span class="chip ${COLORS[i]}"></span>P${i + 1}</span>
@@ -431,7 +467,7 @@ class App {
         makeCycler<Participant>({
           values: whoOptions,
           value: s.who,
-          label: (w) => WHO_LABEL[w],
+          label: whoLabel,
           onChange: (w) => {
             s.who = w;
             if (this.mode === 'single') this.applyModeConstraints();
@@ -461,9 +497,13 @@ class App {
     const humans = active.filter((s) => s.who !== 'ai');
     if (humans.length < 1) return 'Need at least 1 human. The bots refuse to entertain each other.';
     const used = new Set<string>();
+    const pads = this.inputs.connectedPads();
     for (const h of humans) {
       if (used.has(h.who)) return `${WHO_LABEL[h.who]} is assigned twice.`;
       used.add(h.who);
+      if (h.who.startsWith('pad') && !pads.includes(Number(h.who.slice(3)))) {
+        return `${WHO_LABEL[h.who]} isn't connected — plug it in and press any button on it.`;
+      }
     }
     if (this.mode === 'single' && humans.length !== 1) return 'Single Player means one human vs the bots.';
     if (this.mode === 'team') {
