@@ -47,6 +47,35 @@ const WHO_LABEL: Record<string, string> = {
 };
 const COLORS = ['blue', 'orange', 'purple', 'green'] as const;
 
+function isStandalone(): boolean {
+  return (
+    matchMedia('(display-mode: standalone)').matches ||
+    matchMedia('(display-mode: fullscreen)').matches ||
+    (navigator as { standalone?: boolean }).standalone === true
+  );
+}
+
+function isIOS(): boolean {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+function canElementFullscreen(): boolean {
+  const el = document.documentElement as HTMLElement & { webkitRequestFullscreen?: () => void };
+  return !!(el.requestFullscreen || el.webkitRequestFullscreen);
+}
+
+function goFullscreen(): void {
+  const el = document.documentElement as HTMLElement & { webkitRequestFullscreen?: () => void };
+  try {
+    if (el.requestFullscreen) void el.requestFullscreen();
+    else el.webkitRequestFullscreen?.();
+    const so = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
+    so.lock?.('landscape').catch(() => undefined);
+  } catch {
+    /* not supported — button is best-effort */
+  }
+}
+
 class App {
   ui = document.getElementById('ui')!;
   canvas = document.getElementById('game') as HTMLCanvasElement;
@@ -103,6 +132,8 @@ class App {
   async boot(): Promise<void> {
     this.fit();
     window.addEventListener('resize', () => this.fit());
+    window.visualViewport?.addEventListener('resize', () => this.fit());
+    window.visualViewport?.addEventListener('scroll', () => this.fit());
     this.ui.innerHTML = `<div class="screen"><div class="panel"><h1>Loading…</h1><p id="load-pct" style="text-align:center">0%</p></div></div>`;
     await this.assets.load((done, total) => {
       const p = document.getElementById('load-pct');
@@ -119,15 +150,21 @@ class App {
   fit(): void {
     const stage = document.getElementById('stage')!;
     const ratio = WORLD_W / WORLD_H;
-    let w = window.innerWidth;
-    let h = window.innerHeight;
+    // visualViewport is the truth on iOS — innerHeight lies while the URL bar animates
+    const vv = window.visualViewport;
+    const availW = vv ? vv.width : window.innerWidth;
+    const availH = vv ? vv.height : window.innerHeight;
+    const offX = vv ? vv.offsetLeft : 0;
+    const offY = vv ? vv.offsetTop : 0;
+    let w = availW;
+    let h = availH;
     if (w / h > ratio) w = h * ratio;
     else h = w / ratio;
     Object.assign(stage.style, {
       width: `${w}px`,
       height: `${h}px`,
-      left: `${(window.innerWidth - w) / 2}px`,
-      top: `${(window.innerHeight - h) / 2}px`,
+      left: `${offX + (availW - w) / 2}px`,
+      top: `${offY + (availH - h) / 2}px`,
     });
   }
 
@@ -173,7 +210,10 @@ class App {
   }
 
   private topbar(): string {
-    return `<div class="topbar"><button data-f id="mute-btn">${this.sfx.muted ? '🔇 Muted' : '🔊 Sound'}</button></div>`;
+    const fs = !isStandalone() && !isIOS() && canElementFullscreen()
+      ? `<button data-f id="fs-btn">⛶ Fullscreen</button>`
+      : '';
+    return `<div class="topbar">${fs}<button data-f id="mute-btn">${this.sfx.muted ? '🔇 Muted' : '🔊 Sound'}</button></div>`;
   }
 
   private wireTopbar(): void {
@@ -181,6 +221,7 @@ class App {
       const muted = this.sfx.toggleMute();
       (e.currentTarget as HTMLElement).textContent = muted ? '🔇 Muted' : '🔊 Sound';
     });
+    document.getElementById('fs-btn')?.addEventListener('click', () => goFullscreen());
   }
 
   private endSession(): void {
@@ -214,6 +255,7 @@ class App {
           <button data-f id="btn-classic" class="secondary">Classic (2014)</button>
         </div>
         <p class="hint">Up to 4 players · gamepads, keyboards & gnomebots welcome</p>
+        ${isIOS() && !isStandalone() ? '<p class="hint">📱 True full screen on iPhone: <b>Share&nbsp;→&nbsp;Add&nbsp;to&nbsp;Home&nbsp;Screen</b>, then launch SFB from the icon</p>' : ''}
       </div>`
     );
     this.wireTopbar();

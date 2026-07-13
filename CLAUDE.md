@@ -124,6 +124,22 @@ prediction yet — add only if self-movement feels floaty at real-world RTT.
   **0.34 s**; full cold boot from "stop" was 6.6–7.6 s, which is why suspend mode won.
   Idle cost ≈ rootfs pennies instead of ~$3–5/mo always-on. Still exactly ONE machine.
 
+**2026-07-12 — iOS full screen: PWA + viewport fix**
+
+- iPhone Safari cannot hide its chrome for websites (no element Fullscreen API there), so
+  the app is now an installable **PWA**: `manifest.webmanifest` (`display: fullscreen`,
+  landscape), generated icons (gnome-on-grass, 192/512/180 in `client/public/icons/` —
+  committed, NOT in the gitignored generated assets dir), apple-mobile-web-app metas with
+  black-translucent status bar. Installed via Share → Add to Home Screen it runs with no
+  browser UI. The title screen shows that hint automatically on iOS-in-browser.
+- Fixed the cropped-page bug from Rich's screenshot: `fit()` now sizes/centers the stage
+  from `visualViewport` (+ its resize/scroll events) — iOS `innerHeight` lies while the
+  URL bar is visible.
+- Desktop/Android/iPad get a ⛶ Fullscreen topbar button (element fullscreen +
+  best-effort landscape orientation lock). `.webmanifest` MIME type added to the server.
+- No service worker on purpose (online game; avoids cache-invalidation pain). Revisit
+  only if offline shell/faster loads become a goal.
+
 ## Workflow
 
 **Every decision or notable change gets recorded in this file's decision log, then

@@ -1,0 +1,16 @@
+{
+  "name": "Super Fart Bros.",
+  "short_name": "SFB",
+  "description": "Smash-style gnome party game. Farts fire backwards. Beans are power.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "landscape",
+  "background_color": "#101014",
+  "theme_color": "#101014",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

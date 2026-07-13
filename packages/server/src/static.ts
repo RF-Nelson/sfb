@@ -15,6 +15,7 @@ const MIME: Record<string, string> = {
   '.woff2': 'font/woff2',
   '.woff': 'font/woff',
   '.map': 'application/json',
+  '.webmanifest': 'application/manifest+json',
 };
 
 export function serveFrom(root: string, urlPath: string, res: ServerResponse): boolean {
