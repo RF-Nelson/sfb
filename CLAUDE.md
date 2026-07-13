@@ -102,7 +102,19 @@ prediction yet — add only if self-movement feels floaty at real-world RTT.
   zone. If Rich ever cancels the old Namecheap hosting package, that mail service dies
   with it (the MX targets are the hosting package's servers).
 - Namecheap API creds live in `~/Documents/namecheap-test/.env` (user `rfn`); this
-  machine's IP is whitelisted for the Namecheap API.
+  machine's IP is whitelisted for the Namecheap API. Gotcha discovered: after
+  `dns.setDefault` (hosting→BasicDNS), Namecheap's internal state lags — `getHosts`
+  errors with "not using proper DNS servers" and `setHosts` writes are accepted but not
+  published until the state settles (~30 min here). Fix: poll `getHosts` until OK, then
+  re-run `setHosts`.
+
+**2026-07-12 — Scale to zero (cost)**
+
+- fly.io now runs `auto_stop_machines = "suspend"` + `min_machines_running = 0`:
+  the machine suspends when nobody is connected (websockets count as activity, so it
+  never suspends mid-game) and resumes on demand. Measured: resume-from-suspend
+  **0.34 s**; full cold boot from "stop" was 6.6–7.6 s, which is why suspend mode won.
+  Idle cost ≈ rootfs pennies instead of ~$3–5/mo always-on. Still exactly ONE machine.
 
 ## Workflow
 

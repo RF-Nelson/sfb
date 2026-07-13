@@ -7,10 +7,13 @@ primary_region = "ewr"
 [http_service]
   internal_port = 8080
   force_https = true
-  # rooms live in memory and players hold websockets — keep one machine warm
-  auto_stop_machines = "off"
+  # Scale to zero when idle: websockets count as activity, so the machine only
+  # stops when nobody is connected — and an empty server has no rooms to lose
+  # (rooms are destroyed when the last player leaves). First visitor after an
+  # idle period pays ~1s cold start. Must still be exactly ONE machine.
+  auto_stop_machines = "suspend"
   auto_start_machines = true
-  min_machines_running = 1
+  min_machines_running = 0
 
   [[http_service.checks]]
     interval = "30s"
