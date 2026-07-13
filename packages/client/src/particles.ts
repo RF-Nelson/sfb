@@ -107,8 +107,17 @@ export class Particles {
     }
   }
 
-  exhaust(x: number, y: number): void {
-    this.spawn('puff', x, y, (Math.random() - 0.5) * 60, 60 + Math.random() * 60, 0.8, 14 + Math.random() * 12);
+  /** dirX: −1 blows the puff left, +1 right (away from the gnome's facing) */
+  exhaust(x: number, y: number, dirX = 0): void {
+    this.spawn(
+      'puff',
+      x,
+      y,
+      dirX * (50 + Math.random() * 40) + (Math.random() - 0.5) * 40,
+      70 + Math.random() * 70,
+      0.8,
+      14 + Math.random() * 12
+    );
   }
 
   sparkle(x: number, y: number): void {

@@ -140,6 +140,13 @@ prediction yet — add only if self-movement feels floaty at real-world RTT.
 - No service worker on purpose (online game; avoids cache-invalidation pain). Revisit
   only if offline shell/faster loads become a goal.
 
+**2026-07-12 — Fart-pack exhaust anatomy fix**
+
+- Exhaust now emits from the **butt** (behind the gnome, hip height, facing-aware, blown
+  backwards+down). The 2014 game emitted from a fixed mid-torso offset regardless of
+  facing — a ported bug Rich caught, fixed rather than preserved. Applies in-game and on
+  the victory podium.
+
 ## Workflow
 
 **Every decision or notable change gets recorded in this file's decision log, then

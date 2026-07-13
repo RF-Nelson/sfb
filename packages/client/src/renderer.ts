@@ -125,7 +125,9 @@ export class Renderer {
       this.assets.drawFrame(ctx, key, a.t, g.x, g.y + dy);
 
       if (g.packTicks > 0 && Math.floor(a.t * 20) % 3 === 0) {
-        this.particles.exhaust(g.x + 12, g.y - 15);
+        // exhaust comes out of the BUTT: behind the gnome (opposite facing), hip height
+        const back = g.facing === 'L' ? 1 : -1;
+        this.particles.exhaust(g.x + 52 + back * 36, g.y + 6, back);
       }
 
       // meters (original layout)
@@ -234,7 +236,8 @@ export class Renderer {
       const y = 620 + bob;
       const facing = Math.sin(t * 1.1) > 0 ? 'R' : 'L';
       this.assets.drawFrame(ctx, `${winner.color}-fartpack-${facing}`, 0, x, y - 130);
-      this.particles.exhaust(x + 12, y - 15);
+      const back = facing === 'L' ? 1 : -1;
+      this.particles.exhaust(x + 52 + back * 36, y + 6, back);
       // crown
       ctx.font = '90px serif';
       ctx.fillText('\u{1F451}', x + 52, y - 190);
