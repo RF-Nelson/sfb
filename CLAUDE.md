@@ -181,9 +181,9 @@ prediction yet — add only if self-movement feels floaty at real-world RTT.
 - Local-setup menu refit so nothing clips at 720p-class windows: level preview moved
   beside the mode/level cyclers and em-sized, tighter paddings, panel max-height 92%.
   (Fixed the Start/Back clipping Rich reported.)
-- **OG/Twitter meta tags + `/og.png`** (1200×630, composed from game art at build-…
-  actually committed as a static asset in `client/public/`). Regenerate by redrawing on
-  canvas from sprites if the branding changes.
+- **OG/Twitter meta tags + `/og.png`** (1200×630, composed from game art, committed as
+  a static asset in `client/public/`). If branding changes, regenerate it by redrawing
+  on a canvas from the sprites (see session notes) rather than hand-editing.
 
 ## Workflow
 
