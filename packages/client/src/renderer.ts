@@ -100,13 +100,22 @@ export class Renderer {
     // farts
     for (const f of snap.farts) {
       if (f.kind === 'flame') {
-        // rendered purely as particles
-        this.particles.flameJet(f.x, f.y + 20, f.vx > 0 ? -1 : 1);
+        // 2014 behavior: the VISUAL stream stays anchored to the gnome's butt and
+        // roars continuously (the damage zone drifting behind is a parity quirk)
+        const owner = snap.gnomes.find((g) => g.slot === f.owner);
+        const intensity = Math.max(0.25, f.ttl / 75);
+        if (owner && !owner.dead) {
+          const back = owner.facing === 'L' ? 1 : -1;
+          this.particles.flameJet(owner.x + 52 + back * 40, owner.y + 5, back, intensity);
+        } else {
+          this.particles.flameJet(f.x, f.y + 5, f.vx > 0 ? -1 : 1, intensity);
+        }
         continue;
       }
       const key = f.kind === 'cloud' ? 'cloud' : f.kind === 'bounce' ? 'bouncey' : 'mine';
       const a = this.anim(this.fartAnims, f.id, key, dt);
-      const dy = f.kind === 'mine' ? -35 : -30;
+      // center each sprite on butt height: frames are 65 (cloud), 97 (bouncey), 57 (mine) tall
+      const dy = f.kind === 'mine' ? -35 : f.kind === 'bounce' ? -45 : -30;
       this.assets.drawFrame(ctx, key, a.t, f.x, f.y + dy);
       if (f.kind === 'mine' && f.ttl <= 0 && Math.floor(performance.now() / 300) % 2 === 0) {
         ctx.fillStyle = 'rgba(255,60,60,0.9)';

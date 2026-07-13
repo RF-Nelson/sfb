@@ -15,18 +15,24 @@ import {
 
 const CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // no 0/O/1/I/L
 const MAX_PLAYERS = 4;
+const MAX_LOCAL_PER_CONN = 2; // couch co-op online: up to 2 players share a connection
 const ROOM_IDLE_MS = 15 * 60 * 1000;
 
-interface Client {
-  ws: WebSocket;
+interface PlayerEntry {
   slot: number;
   name: string;
   build: Build;
   special: Special;
   team: number;
   ready: boolean;
-  latestBits: number;
+}
+
+export interface Conn {
+  id: number;
+  ws: WebSocket;
   connected: boolean;
+  players: PlayerEntry[];
+  latestBits: Map<number, number>; // by slot
 }
 
 export class Room {
@@ -34,8 +40,9 @@ export class Room {
   mode: GameMode = 'ffa';
   levelId = 'garden';
   aiCount = 0;
-  clients: Client[] = [];
+  conns: Conn[] = [];
   sim: Sim | null = null;
+  private nextConnId = 1;
   private loop: ReturnType<typeof setInterval> | null = null;
   private eventBuffer: SimEvent[] = [];
   private lastActivity = Date.now();
@@ -44,8 +51,8 @@ export class Room {
     this.code = code;
   }
 
-  get host(): Client | undefined {
-    return this.clients.find((c) => c.connected);
+  get host(): Conn | undefined {
+    return this.conns.find((c) => c.connected);
   }
 
   touch(): void {
@@ -56,98 +63,148 @@ export class Room {
     return Date.now() - this.lastActivity > ROOM_IDLE_MS;
   }
 
-  addClient(ws: WebSocket, name: string): Client | null {
+  private freeSlot(): number {
+    const used = new Set(this.conns.flatMap((c) => c.players.map((p) => p.slot)));
+    for (let s = 0; s < MAX_PLAYERS; s++) if (!used.has(s)) return s;
+    return -1;
+  }
+
+  private allPlayers(): Array<{ conn: Conn; p: PlayerEntry }> {
+    return this.conns
+      .filter((c) => c.connected)
+      .flatMap((conn) => conn.players.map((p) => ({ conn, p })))
+      .sort((a, b) => a.p.slot - b.p.slot);
+  }
+
+  private unreadyAll(): void {
+    for (const { p } of this.allPlayers()) p.ready = false;
+  }
+
+  addConn(ws: WebSocket, name: string): Conn | null {
     if (this.sim) return null; // no late joins mid-match (v1)
-    const used = new Set(this.clients.map((c) => c.slot));
-    let slot = -1;
-    for (let s = 0; s < MAX_PLAYERS; s++) {
-      if (!used.has(s)) {
-        slot = s;
-        break;
-      }
-    }
+    const slot = this.freeSlot();
     if (slot < 0) return null;
-    const client: Client = {
+    const conn: Conn = {
+      id: this.nextConnId++,
       ws,
+      connected: true,
+      players: [this.makePlayer(slot, name)],
+      latestBits: new Map(),
+    };
+    this.conns.push(conn);
+    this.touch();
+    return conn;
+  }
+
+  private makePlayer(slot: number, name: string): PlayerEntry {
+    return {
       slot,
-      name: name.slice(0, 12) || `Player ${slot + 1}`,
+      name: (name || '').slice(0, 12) || `Player ${slot + 1}`,
       build: 'normal',
       special: 'bounce',
       team: (slot % 2) + 1,
       ready: false,
-      latestBits: 0,
-      connected: true,
     };
-    this.clients.push(client);
-    this.clients.sort((a, b) => a.slot - b.slot);
-    this.touch();
-    return client;
   }
 
-  removeClient(client: Client): void {
-    client.connected = false;
-    client.latestBits = 0;
+  removeConn(conn: Conn): void {
+    conn.connected = false;
+    conn.latestBits.clear();
     if (!this.sim) {
-      this.clients = this.clients.filter((c) => c !== client);
+      this.conns = this.conns.filter((c) => c !== conn);
     }
-    if (this.clients.every((c) => !c.connected)) {
+    if (this.conns.every((c) => !c.connected)) {
       this.stopLoop();
       this.onEmpty(this);
       return;
     }
-    this.broadcastLobbyIfIdle();
+    if (!this.sim) {
+      this.unreadyAll();
+      this.broadcastLobby();
+    }
   }
 
-  handle(client: Client, msg: C2S): void {
+  handle(conn: Conn, msg: C2S): void {
     this.touch();
     switch (msg.t) {
-      case 'loadout':
+      case 'add-local': {
         if (this.sim) return;
-        if (msg.build) client.build = msg.build;
-        if (msg.special) client.special = msg.special;
-        if (msg.team === 1 || msg.team === 2) client.team = msg.team;
-        client.ready = false;
+        if (conn.players.length >= MAX_LOCAL_PER_CONN) return;
+        const slot = this.freeSlot();
+        if (slot < 0) return this.send(conn, { t: 'error', msg: 'Room is full' });
+        conn.players.push(this.makePlayer(slot, msg.name));
+        this.unreadyAll();
         this.broadcastLobby();
         break;
+      }
+      case 'remove-local': {
+        if (this.sim) return;
+        if (conn.players.length <= 1) return; // the connection always keeps one player
+        const i = conn.players.findIndex((p) => p.slot === msg.slot);
+        if (i > 0) {
+          conn.players.splice(i, 1);
+          this.unreadyAll();
+          this.broadcastLobby();
+        }
+        break;
+      }
+      case 'loadout': {
+        if (this.sim) return;
+        const p =
+          msg.slot === undefined
+            ? conn.players[0]
+            : conn.players.find((q) => q.slot === msg.slot);
+        if (!p) return;
+        if (msg.build) p.build = msg.build;
+        if (msg.special) p.special = msg.special;
+        if (msg.team === 1 || msg.team === 2) p.team = msg.team;
+        p.ready = false;
+        this.broadcastLobby();
+        break;
+      }
       case 'config':
-        if (this.sim || client !== this.host) return;
+        if (this.sim || conn !== this.host) return;
         if (msg.mode === 'ffa' || msg.mode === 'team') this.mode = msg.mode;
         if (typeof msg.levelId === 'string') this.levelId = msg.levelId;
         if (typeof msg.aiCount === 'number') this.aiCount = Math.max(0, Math.min(3, Math.floor(msg.aiCount)));
-        for (const c of this.clients) c.ready = false;
+        this.unreadyAll();
         this.broadcastLobby();
         break;
       case 'ready':
         if (this.sim) return;
-        client.ready = msg.ready;
+        for (const p of conn.players) p.ready = msg.ready;
         this.broadcastLobby();
         break;
       case 'start':
-        this.tryStart(client);
+        this.tryStart(conn);
         break;
-      case 'input':
-        client.latestBits = msg.bits | 0;
+      case 'input': {
+        const slot = msg.slot ?? conn.players[0]?.slot;
+        if (slot !== undefined && conn.players.some((p) => p.slot === slot)) {
+          conn.latestBits.set(slot, msg.bits | 0);
+        }
         break;
+      }
       case 'ping':
-        this.send(client, { t: 'pong', ts: msg.ts });
+        this.send(conn, { t: 'pong', ts: msg.ts });
         break;
     }
   }
 
-  private tryStart(client: Client): void {
-    if (this.sim || client !== this.host) return;
-    const humans = this.clients.filter((c) => c.connected);
-    if (humans.length < 1) return;
-    if (!humans.every((c) => c.ready)) return;
-    const totalAI = Math.min(this.aiCount, MAX_PLAYERS - humans.length);
-    if (humans.length + totalAI < 2) return;
+  private tryStart(conn: Conn): void {
+    if (this.sim || conn !== this.host) return;
+    const entries = this.allPlayers();
+    if (entries.length < 1) return;
+    if (!entries.every(({ p }) => p.ready)) return;
+    const totalAI = Math.min(this.aiCount, MAX_PLAYERS - entries.length);
+    if (entries.length + totalAI < 2) return;
 
-    const players: PlayerSetup[] = humans.map((c) => ({
-      slot: c.slot,
-      name: c.name,
-      build: c.build,
-      special: c.special,
-      team: this.mode === 'team' ? c.team : c.slot + 1,
+    const players: PlayerSetup[] = entries.map(({ p }) => ({
+      slot: p.slot,
+      name: p.name,
+      build: p.build,
+      special: p.special,
+      team: this.mode === 'team' ? p.team : p.slot + 1,
       isAI: false,
     }));
     const used = new Set(players.map((p) => p.slot));
@@ -174,8 +231,10 @@ export class Room {
     };
     this.sim = new Sim(config);
     this.eventBuffer = [];
-    for (const c of this.clients) {
-      if (c.connected) this.send(c, { t: 'starting', config, yourSlot: c.slot });
+    for (const c of this.conns) {
+      if (c.connected) {
+        this.send(c, { t: 'starting', config, yourSlots: c.players.map((p) => p.slot) });
+      }
     }
     this.loop = setInterval(() => this.tickOnce(), TICK_MS);
   }
@@ -184,7 +243,10 @@ export class Room {
     const sim = this.sim;
     if (!sim) return;
     const inputs: number[] = [0, 0, 0, 0];
-    for (const c of this.clients) inputs[c.slot] = c.connected ? c.latestBits : 0;
+    for (const conn of this.conns) {
+      if (!conn.connected) continue;
+      for (const [slot, bits] of conn.latestBits) inputs[slot] = bits;
+    }
     const events = sim.step(inputs);
     this.eventBuffer.push(...events);
 
@@ -198,8 +260,9 @@ export class Room {
       const result = sim.result;
       this.stopLoop();
       this.sim = null;
-      for (const c of this.clients) c.ready = false;
-      this.clients = this.clients.filter((c) => c.connected);
+      this.conns = this.conns.filter((c) => c.connected);
+      this.unreadyAll();
+      for (const c of this.conns) c.latestBits.clear();
       this.broadcast({ t: 'end', result });
       this.broadcastLobby();
     }
@@ -217,18 +280,17 @@ export class Room {
       mode: this.mode,
       levelId: this.levelId,
       aiCount: this.aiCount,
-      players: this.clients
-        .filter((c) => c.connected)
-        .map((c) => ({
-          slot: c.slot,
-          name: c.name,
-          build: c.build,
-          special: c.special,
-          team: c.team,
-          ready: c.ready,
-          host: c === host,
-          connected: c.connected,
-        })),
+      players: this.allPlayers().map(({ conn, p }) => ({
+        slot: p.slot,
+        name: p.name,
+        build: p.build,
+        special: p.special,
+        team: p.team,
+        ready: p.ready,
+        host: conn === host && p.slot === conn.players[0]?.slot,
+        connected: conn.connected,
+        connId: conn.id,
+      })),
     };
   }
 
@@ -236,17 +298,13 @@ export class Room {
     this.broadcast({ t: 'lobby', lobby: this.lobbyView() });
   }
 
-  private broadcastLobbyIfIdle(): void {
-    if (!this.sim) this.broadcastLobby();
-  }
-
-  send(client: Client, msg: S2C): void {
-    if (client.ws.readyState === client.ws.OPEN) client.ws.send(JSON.stringify(msg));
+  send(conn: Conn, msg: S2C): void {
+    if (conn.ws.readyState === conn.ws.OPEN) conn.ws.send(JSON.stringify(msg));
   }
 
   broadcast(msg: S2C): void {
     const raw = JSON.stringify(msg);
-    for (const c of this.clients) {
+    for (const c of this.conns) {
       if (c.connected && c.ws.readyState === c.ws.OPEN) c.ws.send(raw);
     }
   }

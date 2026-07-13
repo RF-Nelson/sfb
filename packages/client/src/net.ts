@@ -3,9 +3,9 @@ import { C2S, LobbyView, MatchConfig, MatchResult, S2C, Snapshot, TICK_MS } from
 const INTERP_DELAY_MS = 110;
 
 export interface NetCallbacks {
-  onWelcome(code: string, slot: number): void;
+  onWelcome(code: string, slot: number, connId: number): void;
   onLobby(lobby: LobbyView): void;
-  onStarting(config: MatchConfig, yourSlot: number): void;
+  onStarting(config: MatchConfig, yourSlots: number[]): void;
   onEnd(result: MatchResult): void;
   onError(msg: string): void;
   onClose(): void;
@@ -17,6 +17,8 @@ export class NetClient {
   private snaps: Snapshot[] = [];
   private clockOffset: number | null = null; // recvTime - tick*TICK_MS (min-tracked)
   yourSlot = -1;
+  yourSlots: number[] = [];
+  connId = -1;
   rtt = 0;
 
   constructor(private cb: NetCallbacks) {}
@@ -47,7 +49,8 @@ export class NetClient {
     switch (msg.t) {
       case 'welcome':
         this.yourSlot = msg.slot;
-        this.cb.onWelcome(msg.code, msg.slot);
+        this.connId = msg.connId;
+        this.cb.onWelcome(msg.code, msg.slot, msg.connId);
         break;
       case 'lobby':
         this.cb.onLobby(msg.lobby);
@@ -55,8 +58,9 @@ export class NetClient {
       case 'starting':
         this.snaps = [];
         this.clockOffset = null;
-        this.yourSlot = msg.yourSlot;
-        this.cb.onStarting(msg.config, msg.yourSlot);
+        this.yourSlots = msg.yourSlots;
+        this.yourSlot = msg.yourSlots[0] ?? -1;
+        this.cb.onStarting(msg.config, msg.yourSlots);
         break;
       case 'snap': {
         const snap = msg.snap;

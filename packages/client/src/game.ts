@@ -117,10 +117,15 @@ export class GameSession {
     }
 
     if (this.opts.online) {
-      const src = this.opts.sources.find((s): s is Source => s !== null) ?? null;
       const latest = this.opts.online.latest();
-      if (src && latest && !latest.over) {
-        this.opts.online.send({ t: 'input', tick: latest.tick, bits: this.inputs.bitsFor(src) });
+      if (latest && !latest.over) {
+        // one input message per local player — couch co-op shares this connection
+        for (let slot = 0; slot < 4; slot++) {
+          const src = this.opts.sources[slot];
+          if (src) {
+            this.opts.online.send({ t: 'input', tick: latest.tick, bits: this.inputs.bitsFor(src), slot });
+          }
+        }
       }
       this.handleEvents(this.opts.online.drainEvents());
       const snap = this.opts.online.interpolated();

@@ -93,18 +93,28 @@ export class Particles {
     this.shake = Math.min(24, this.shake + 16);
   }
 
-  flameJet(x: number, y: number, dir: number): void {
-    for (let i = 0; i < 4; i++) {
+  /**
+   * Continuous short-range flamethrower cone, anchored at the butt (x,y = nozzle).
+   * Matches the 2014 look: a dense roaring stream, not travelling puffs — high
+   * emission rate, fast particles, SHORT lifetimes so the fire dies ~150px out.
+   * dir: −1 sprays left, +1 right. intensity 0..1 tapers the stream as ttl runs out.
+   */
+  flameJet(x: number, y: number, dir: number, intensity = 1): void {
+    const n = Math.max(3, Math.round(15 * intensity));
+    for (let i = 0; i < n; i++) {
+      const along = Math.random(); // 0 at nozzle → 1 at cone tip
       this.spawn(
         'fire',
-        x + Math.random() * 30,
-        y + 20 + Math.random() * 60,
-        dir * (180 + Math.random() * 160),
-        (Math.random() - 0.5) * 70 - 30,
-        0.25 + Math.random() * 0.2,
-        14 + Math.random() * 16
+        x + dir * along * 26,
+        y + (Math.random() - 0.5) * (14 + along * 30), // cone widens with distance
+        dir * (380 + Math.random() * 320),
+        (Math.random() - 0.5) * 80 - 30,
+        0.1 + Math.random() * 0.2, // short life = short range
+        7 + Math.random() * 13 + along * 6
       );
     }
+    // hot core right at the nozzle
+    this.spawn('fire', x + dir * 8, y + (Math.random() - 0.5) * 10, dir * 260, -20, 0.09 + Math.random() * 0.06, 16 + Math.random() * 8);
   }
 
   /** dirX: −1 blows the puff left, +1 right (away from the gnome's facing) */

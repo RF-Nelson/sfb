@@ -1,5 +1,5 @@
 import { BTN_FART, BTN_JUMP, BTN_LEFT, BTN_PACK, BTN_RIGHT, BTN_SPECIAL } from 'sfb-shared';
-import type { Inputs } from './inputs';
+import { hasTouch, type Inputs } from './inputs';
 
 const BITS: Record<string, number> = {
   left: BTN_LEFT,
@@ -80,6 +80,7 @@ export class TouchControls {
   }
 
   show(on: boolean, withPause: boolean): void {
+    if (!hasTouch()) on = false; // never on desktop, no matter what a saved setup says
     this.el.classList.toggle('hidden', !on);
     this.el.querySelector('[data-tb="pause"]')?.classList.toggle('hidden', !withPause);
     if (!on) {

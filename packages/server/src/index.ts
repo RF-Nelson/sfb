@@ -18,7 +18,7 @@ const wss = new WebSocketServer({ server: http, path: '/ws' });
 
 wss.on('connection', (ws: WebSocket) => {
   let room: Room | null = null;
-  let client: ReturnType<Room['addClient']> = null;
+  let conn: ReturnType<Room['addConn']> = null;
 
   const send = (msg: unknown) => {
     if (ws.readyState === ws.OPEN) ws.send(JSON.stringify(msg));
@@ -36,9 +36,9 @@ wss.on('connection', (ws: WebSocket) => {
     if (msg.t === 'create') {
       if (room) return;
       room = manager.create();
-      client = room.addClient(ws, msg.name ?? '');
-      if (!client) return send({ t: 'error', msg: 'Could not create room' });
-      send({ t: 'welcome', code: room.code, slot: client.slot });
+      conn = room.addConn(ws, msg.name ?? '');
+      if (!conn) return send({ t: 'error', msg: 'Could not create room' });
+      send({ t: 'welcome', code: room.code, slot: conn.players[0].slot, connId: conn.id });
       room.broadcastLobby();
       return;
     }
@@ -46,20 +46,20 @@ wss.on('connection', (ws: WebSocket) => {
       if (room) return;
       const found = manager.get(msg.code ?? '');
       if (!found) return send({ t: 'error', msg: 'Room not found' });
-      client = found.addClient(ws, msg.name ?? '');
-      if (!client) return send({ t: 'error', msg: 'Room is full or already playing' });
+      conn = found.addConn(ws, msg.name ?? '');
+      if (!conn) return send({ t: 'error', msg: 'Room is full or already playing' });
       room = found;
-      send({ t: 'welcome', code: room.code, slot: client.slot });
+      send({ t: 'welcome', code: room.code, slot: conn.players[0].slot, connId: conn.id });
       room.broadcastLobby();
       return;
     }
-    if (room && client) room.handle(client, msg);
+    if (room && conn) room.handle(conn, msg);
   });
 
   ws.on('close', () => {
-    if (room && client) room.removeClient(client);
+    if (room && conn) room.removeConn(conn);
     room = null;
-    client = null;
+    conn = null;
   });
 });
 

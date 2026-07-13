@@ -94,7 +94,8 @@ class App {
   net: NetClient | null = null;
   lobby: LobbyView | null = null;
   mySlot = -1;
-  myOnlineSource: Source = hasTouch() ? 'touch' : 'kb1';
+  myConnId = -1;
+  myOnlineSources: Record<number, Source> = {};
   myName = localStorage.getItem('sfb-name') ?? '';
   postResult: MatchResult | null = null;
   postOnline = false;
@@ -110,7 +111,15 @@ class App {
     if (saved) {
       try {
         const s = JSON.parse(saved) as SlotSetup[];
-        if (Array.isArray(s) && s.length === 4) return s;
+        if (Array.isArray(s) && s.length === 4) {
+          if (!hasTouch()) {
+            // a setup saved on a touch device must not resurrect touch on desktop
+            s.forEach((slot, i) => {
+              if (slot.who === 'touch') slot.who = i === 0 ? 'kb1' : 'off';
+            });
+          }
+          return s;
+        }
       } catch {
         /* fall through */
       }
@@ -235,6 +244,8 @@ class App {
     this.net = null;
     this.lobby = null;
     this.mySlot = -1;
+    this.myConnId = -1;
+    this.myOnlineSources = {};
   }
 
   // ------------------------------------------------------------------ title
@@ -254,8 +265,12 @@ class App {
           <button data-f id="btn-howto">How To Play</button>
           <button data-f id="btn-classic" class="secondary">Classic (2014)</button>
         </div>
-        <p class="hint">Up to 4 players · gamepads, keyboards & gnomebots welcome</p>
-        ${isIOS() && !isStandalone() ? '<p class="hint">📱 True full screen on iPhone: <b>Share&nbsp;→&nbsp;Add&nbsp;to&nbsp;Home&nbsp;Screen</b>, then launch SFB from the icon</p>' : ''}
+        <p class="hint hint-chip">Up to 4 players · gamepads, keyboards & gnomebots welcome</p>
+        ${
+          isIOS() && !isStandalone() && matchMedia('(hover: none)').matches
+            ? '<p class="hint hint-chip">📱 True full screen: <b>Share&nbsp;→&nbsp;Add&nbsp;to&nbsp;Home&nbsp;Screen</b>, then launch SFB from the icon</p>'
+            : ''
+        }
       </div>`
     );
     this.wireTopbar();
@@ -555,20 +570,28 @@ class App {
     document.getElementById('btn-back')!.addEventListener('click', () => this.showTitle());
   }
 
+  private defaultOnlineSource(nth: number): Source {
+    if (nth === 0) return hasTouch() ? 'touch' : 'kb1';
+    const pads = this.inputs.connectedPads();
+    return pads.length > 0 ? (`pad${pads[0]}` as Source) : 'kb2';
+  }
+
   private connectNet(): Promise<void> {
     if (this.net) return Promise.resolve();
     this.net = new NetClient({
-      onWelcome: () => {
-        /* lobby message follows */
+      onWelcome: (_code, _slot, connId) => {
+        this.myConnId = connId;
       },
       onLobby: (lobby) => {
         this.lobby = lobby;
         this.mySlot = this.net?.yourSlot ?? this.mySlot;
         if (this.screen === 'lobby' || this.screen === 'online') this.showLobby();
       },
-      onStarting: (config, yourSlot) => {
+      onStarting: (config, yourSlots) => {
         const sources: SlotSources = [null, null, null, null];
-        sources[yourSlot] = this.myOnlineSource;
+        yourSlots.forEach((slot, i) => {
+          sources[slot] = this.myOnlineSources[slot] ?? this.defaultOnlineSource(i);
+        });
         this.startSession(config, sources, this.net);
       },
       onEnd: (result) => {
@@ -597,10 +620,12 @@ class App {
     const lobby = this.lobby;
     if (!lobby || !this.net) return this.showOnline();
     this.endSession();
-    const me = lobby.players.find((p) => p.slot === this.net!.yourSlot);
-    const iAmHost = !!me?.host;
+    const myPlayers = lobby.players.filter((p) => p.connId === this.myConnId);
+    const iAmHost = myPlayers.some((p) => p.host);
+    const meReady = myPlayers.length > 0 && myPlayers.every((p) => p.ready);
     const allReady = lobby.players.length > 0 && lobby.players.every((p) => p.ready);
     const total = lobby.players.length + Math.min(lobby.aiCount, 4 - lobby.players.length);
+    const canAddLocal = myPlayers.length === 1 && lobby.players.length < 4;
 
     this.setScreen(
       'lobby',
@@ -612,9 +637,10 @@ class App {
           <p class="hint">Friends join at <b>${location.host}</b> → Online → this code · <span id="rtt-badge"></span></p>
           <div class="row" id="cfg-row"></div>
           <div class="lobby-players" id="lobby-players"></div>
-          <div class="row" id="my-row"></div>
+          <div id="my-rows"></div>
           <div class="row">
-            <button data-f data-f-default id="btn-ready">${me?.ready ? 'Unready' : 'Ready Up!'}</button>
+            <button data-f data-f-default id="btn-ready">${meReady ? 'Unready' : 'Ready Up!'}</button>
+            ${canAddLocal ? '<button data-f id="btn-add-local" class="secondary">+ Add couch player</button>' : ''}
             ${iAmHost ? `<button data-f id="btn-go" ${allReady && total >= 2 ? '' : 'disabled'}>Start Game</button>` : ''}
             <button data-f data-back id="btn-leave" class="danger">Leave</button>
           </div>
@@ -659,7 +685,7 @@ class App {
       list.appendChild(
         el(`<div class="lobby-player">
           <span class="chip ${COLORS[p.slot]}"></span>
-          <span class="name">${p.name}${p.host ? ' ★' : ''}${p.slot === this.net.yourSlot ? ' (you)' : ''}</span>
+          <span class="name">${p.name}${p.host ? ' ★' : ''}${p.connId === this.myConnId ? ' (you)' : ''}</span>
           <span>${BUILD_LABEL[p.build]}</span><span>${SPECIAL_LABEL[p.special]}</span>
           ${lobby.mode === 'team' ? `<span>Team ${p.team}</span>` : ''}
           <span class="ready-dot">${p.ready ? '✔ ready' : '…'}</span>
@@ -667,37 +693,68 @@ class App {
       );
     }
 
-    const myRow = document.getElementById('my-row')!;
-    if (me) {
-      myRow.appendChild(
-        makeCycler<Build>({ values: ['normal', 'fast', 'slow'], value: me.build, label: (b) => BUILD_LABEL[b], onChange: (b) => this.net!.send({ t: 'loadout', build: b }) })
+    // one loadout+controls row per LOCAL player on this connection (couch co-op online)
+    const myRows = document.getElementById('my-rows')!;
+    const padIds = this.inputs.connectedPads();
+    const sourceChoices: Source[] = [
+      ...(hasTouch() ? (['touch'] as Source[]) : []),
+      'kb1',
+      'kb2',
+      ...padIds.map((i) => `pad${i}` as Source),
+    ];
+    myPlayers.forEach((p, nth) => {
+      const row = el(
+        `<div class="row my-player-row"><span><span class="chip ${COLORS[p.slot]}"></span>${p.name}</span></div>`
       );
-      myRow.appendChild(
-        makeCycler<Special>({ values: ['bounce', 'flame', 'mine'], value: me.special, label: (s) => SPECIAL_LABEL[s], onChange: (s) => this.net!.send({ t: 'loadout', special: s }) })
-      );
-      if (lobby.mode === 'team') {
-        myRow.appendChild(
-          makeCycler<number>({ values: [1, 2], value: me.team, label: (t) => `Team ${t}`, onChange: (t) => this.net!.send({ t: 'loadout', team: t }) })
-        );
-      }
-      const padIds = this.inputs.connectedPads();
-      const sourceChoices: Source[] = [
-        ...(hasTouch() ? (['touch'] as Source[]) : []),
-        'kb1',
-        'kb2',
-        ...padIds.map((i) => `pad${i}` as Source),
-      ];
-      myRow.appendChild(
-        makeCycler<Source>({
-          values: sourceChoices,
-          value: sourceChoices.includes(this.myOnlineSource) ? this.myOnlineSource : sourceChoices[0],
-          label: (s) => `Controls: ${WHO_LABEL[s]}`,
-          onChange: (s) => (this.myOnlineSource = s),
+      row.appendChild(
+        makeCycler<Build>({
+          values: ['normal', 'fast', 'slow'],
+          value: p.build,
+          label: (b) => BUILD_LABEL[b],
+          onChange: (b) => this.net!.send({ t: 'loadout', slot: p.slot, build: b }),
         })
       );
-    }
+      row.appendChild(
+        makeCycler<Special>({
+          values: ['bounce', 'flame', 'mine'],
+          value: p.special,
+          label: (s) => SPECIAL_LABEL[s],
+          onChange: (s) => this.net!.send({ t: 'loadout', slot: p.slot, special: s }),
+        })
+      );
+      if (lobby.mode === 'team') {
+        row.appendChild(
+          makeCycler<number>({
+            values: [1, 2],
+            value: p.team,
+            label: (t) => `Team ${t}`,
+            onChange: (t) => this.net!.send({ t: 'loadout', slot: p.slot, team: t }),
+          })
+        );
+      }
+      const current = this.myOnlineSources[p.slot] ?? this.defaultOnlineSource(nth);
+      this.myOnlineSources[p.slot] = sourceChoices.includes(current) ? current : sourceChoices[0];
+      row.appendChild(
+        makeCycler<Source>({
+          values: sourceChoices,
+          value: this.myOnlineSources[p.slot],
+          label: (s) => `Controls: ${WHO_LABEL[s]}`,
+          onChange: (s) => (this.myOnlineSources[p.slot] = s),
+        })
+      );
+      if (nth > 0) {
+        const rm = el(`<button data-f class="danger">✕</button>`);
+        rm.addEventListener('click', () => this.net!.send({ t: 'remove-local', slot: p.slot }));
+        row.appendChild(rm);
+      }
+      myRows.appendChild(row);
+    });
+    this.focus.refresh();
 
-    document.getElementById('btn-ready')!.addEventListener('click', () => this.net!.send({ t: 'ready', ready: !me?.ready }));
+    document.getElementById('btn-add-local')?.addEventListener('click', () => {
+      this.net!.send({ t: 'add-local', name: `${this.myName || 'Gnome'} 2` });
+    });
+    document.getElementById('btn-ready')!.addEventListener('click', () => this.net!.send({ t: 'ready', ready: !meReady }));
     document.getElementById('btn-go')?.addEventListener('click', () => this.net!.send({ t: 'start' }));
     document.getElementById('btn-leave')!.addEventListener('click', () => {
       this.leaveOnline();

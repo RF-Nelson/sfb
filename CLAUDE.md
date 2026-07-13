@@ -147,6 +147,25 @@ prediction yet — add only if self-movement feels floaty at real-world RTT.
   facing — a ported bug Rich caught, fixed rather than preserved. Applies in-game and on
   the victory podium.
 
+**2026-07-12 — FX positioning, couch-online co-op, UI polish**
+
+- Special-fart render audit: flame jet re-centered on the butt (was hip-to-below-feet);
+  bouncy fart raised (−45 draw offset, its frame is 97px vs cloud's 65); cloud/mine
+  verified correct. Flame reworked to the 2014 look: a **continuous short-range cone
+  anchored at the gnome's butt** (dense emission, short particle lifetimes ⇒ ~150px
+  reach, intensity tapers with ttl) instead of travelling puffs. Note: the sim's flame
+  damage zone still drifts backwards (2014 parity); only the visual is anchored — the
+  original had the same visual/hitbox mismatch.
+- **Couch co-op inside online rooms**: one connection may own up to 2 players
+  (`add-local`/`remove-local`; per-slot `loadout`/`input`; `starting` sends `yourSlots`;
+  `LobbyPlayer.connId`). Each local player picks their own controls (keyboards, any
+  gamepad, touch) in the lobby. Verified: host with KB1+KB2 + remote joiner, all three
+  moving independently.
+- Touch overlay hard-gated to touch devices (`TouchControls.show` no-ops when
+  `!hasTouch()`; saved setups from phones can't resurrect it on desktop).
+- Title-screen hints wear dark `.hint-chip` pills (black-on-flowers was unreadable);
+  PWA hint additionally requires `(hover: none)` so it can never show on desktop.
+
 ## Workflow
 
 **Every decision or notable change gets recorded in this file's decision log, then
