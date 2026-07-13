@@ -108,6 +108,14 @@ prediction yet — add only if self-movement feels floaty at real-world RTT.
   published until the state settles (~30 min here). Fix: poll `getHosts` until OK, then
   re-run `setHosts`.
 
+**2026-07-12 — superfartbros.com is live on fly**
+
+- Both Let's Encrypt certs issued; https://superfartbros.com serves the game (200),
+  www 301-redirects to apex, /classic serves the 2014 original, MX/mail records intact,
+  and websocket rooms work over the custom domain. The old Namecheap-hosting site is no
+  longer reachable at the domain (hosting package itself untouched — mail still lives
+  there).
+
 **2026-07-12 — Scale to zero (cost)**
 
 - fly.io now runs `auto_stop_machines = "suspend"` + `min_machines_running = 0`:
